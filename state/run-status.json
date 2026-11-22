@@ -5,17 +5,17 @@
   "deployed": true,
   "executionEnv": "github-actions",
   "noExternalSend": true,
-  "runId": "45013311308",
+  "runId": "45013996534",
   "trigger": "手动",
   "triggeredSchedule": "",
   "plannedBeijing": {
     "primary": "03:35",
     "fallback": "06:35"
   },
-  "startedAt": "2026-11-22T10:37:07.458Z",
-  "finishedAt": "2026-11-22T10:41:45.131Z",
-  "startedBeijing": "2026年11月22日 18:37",
-  "finishedBeijing": "2026年11月22日 18:41",
+  "startedAt": "2026-11-22T10:45:55.307Z",
+  "finishedAt": "2026-11-22T10:50:41.642Z",
+  "startedBeijing": "2026年11月22日 18:45",
+  "finishedBeijing": "2026年11月22日 18:50",
   "nextScheduled": {
     "iso": "2026-11-22T19:35:00.000Z",
     "beijing": "2026年11月23日 03:35",
@@ -58,21 +58,21 @@
   },
   "counts": {
     "fetched": 0,
-    "excluded": 0,
+    "excluded": 11,
     "duplicate": 0,
     "inserted": 0,
     "updated": 0,
     "mergedSources": 0,
-    "notices": 0,
-    "projects": 0
+    "notices": 34,
+    "projects": 34
   },
   "collectResult": "success",
   "saveResult": "success",
   "buildResult": "success",
   "deployResult": "pending-deploy",
   "verifyResult": "not-verified",
-  "dataSavedAt": "2026-11-22T10:41:45.131Z",
-  "lastSuccessCollectedAt": "2026-11-22T10:41:45.131Z",
+  "dataSavedAt": "2026-11-22T10:50:41.642Z",
+  "lastSuccessCollectedAt": "2026-11-22T10:50:41.642Z",
   "lastDeployedAt": null,
   "lastDeployedRunId": null,
   "lastPublishedDataAt": null,
@@ -80,12 +80,12 @@
     "before": {
       "exists": true,
       "integrity": "ok",
-      "notices": 0
+      "notices": 34
     },
     "after": {
       "exists": true,
       "integrity": "ok",
-      "notices": 0
+      "notices": 34
     }
   },
   "initializedFirstRun": false,
