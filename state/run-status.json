@@ -5,17 +5,17 @@
   "deployed": true,
   "executionEnv": "github-actions",
   "noExternalSend": true,
-  "runId": "45010937703",
+  "runId": "45011998446",
   "trigger": "手动",
   "triggeredSchedule": "",
   "plannedBeijing": {
     "primary": "03:35",
     "fallback": "06:35"
   },
-  "startedAt": "2026-11-22T10:08:22.357Z",
-  "finishedAt": "2026-11-22T10:13:11.614Z",
-  "startedBeijing": "2026年11月22日 18:08",
-  "finishedBeijing": "2026年11月22日 18:13",
+  "startedAt": "2026-11-22T10:21:10.379Z",
+  "finishedAt": "2026-11-22T10:25:37.129Z",
+  "startedBeijing": "2026年11月22日 18:21",
+  "finishedBeijing": "2026年11月22日 18:25",
   "nextScheduled": {
     "iso": "2026-11-22T19:35:00.000Z",
     "beijing": "2026年11月23日 03:35",
@@ -71,16 +71,16 @@
   "buildResult": "success",
   "deployResult": "pending-deploy",
   "verifyResult": "not-verified",
-  "dataSavedAt": "2026-11-22T10:13:11.614Z",
-  "lastSuccessCollectedAt": "2026-11-22T10:13:11.614Z",
+  "dataSavedAt": "2026-11-22T10:25:37.129Z",
+  "lastSuccessCollectedAt": "2026-11-22T10:25:37.129Z",
   "lastDeployedAt": null,
   "lastDeployedRunId": null,
   "lastPublishedDataAt": null,
   "database": {
     "before": {
-      "exists": false,
-      "integrity": "missing",
-      "note": "首次运行无数据库，需安全初始化"
+      "exists": true,
+      "integrity": "ok",
+      "notices": 0
     },
     "after": {
       "exists": true,
@@ -88,7 +88,7 @@
       "notices": 0
     }
   },
-  "initializedFirstRun": true,
+  "initializedFirstRun": false,
   "message": "",
   "build": {
     "result": "success",
