@@ -16,6 +16,9 @@ const { buildPreview } = require("../lib/notify");
 const { Store } = require("../lib/store");
 const { buildPublicSite } = require("./build-public-site");
 const { bjText, nextSchedule, readPreviousSummary, validateSummary, emptyCounts } = require("./lib/run-state");
+const businessProfile = require("../config/business-profile.json");
+const assignmentConfig = require("../config/assignment.json");
+const demoPilot = require("../config/demo-pilot.json");
 
 const ROOT = path.join(__dirname, "..");
 const DB = process.env.NOTICE_DB_PATH || path.join(ROOT, "data", "notices.sqlite");
@@ -117,6 +120,14 @@ async function main() {
         scoringRuleVersion: require("../config/scoring.json").ruleVersion,
         scoringStatus: require("../config/scoring.json").status,
         matchingRuleVersion: require("../config/keywords.json").ruleVersion,
+        simulation: {
+          enabled: Boolean(businessProfile.simulation?.enabled || assignmentConfig.simulation?.enabled),
+          label: businessProfile.simulation?.label || "模拟配置",
+          warning: businessProfile.simulation?.warning || "模拟数据不可用于真实投标决策。",
+          scope: businessProfile.simulation?.scope || [],
+          realPilotNotice: demoPilot.notice,
+          pilotWarning: demoPilot.warning
+        },
         notices: enriched,
         sourceStatus: status,
         linkChecks: links.checks || {},
@@ -147,10 +158,10 @@ async function main() {
         previewSummary: preview.summary,
         config: {
           channels: require("../config/channels.json").channels.map((c) => ({ id: c.id, label: c.label, status: c.status })),
-          people: require("../config/assignment.json").people.map((p) => ({ personId: p.personId, name: p.name, isTestData: p.isTestData, role: p.role }))
+          people: assignmentConfig.people.map((p) => ({ personId: p.personId, name: p.name, isTestData: p.isTestData, simulated: p.simulated, role: p.role }))
         },
         assignmentDetails: {
-          assignment: require("../config/assignment.json"),
+          assignment: assignmentConfig,
           // 公开产物只保留展示所需字段，不暴露渠道密钥变量名与内部备注
           channels: {
             subscriptions: (require("../config/channels.json").subscriptions || []).map((s) => ({
