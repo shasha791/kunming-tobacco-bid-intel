@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "success",
+  "mode": "cloud-collect-only",
+  "deployed": true,
+  "executionEnv": "github-actions",
+  "noExternalSend": true,
+  "runId": "45010937703",
+  "trigger": "手动",
+  "triggeredSchedule": "",
+  "plannedBeijing": {
+    "primary": "03:35",
+    "fallback": "06:35"
+  },
+  "startedAt": "2026-11-22T10:08:22.357Z",
+  "finishedAt": "2026-11-22T10:13:11.614Z",
+  "startedBeijing": "2026年11月22日 18:08",
+  "finishedBeijing": "2026年11月22日 18:13",
+  "nextScheduled": {
+    "iso": "2026-11-22T19:35:00.000Z",
+    "beijing": "2026年11月23日 03:35",
+    "label": "主任务 03:35（次日）"
+  },
+  "sources": [
+    {
+      "sourceId": "cgjy",
+      "sourceName": "中烟电子采购平台",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": ""
+    },
+    {
+      "sourceId": "yn-ggzy",
+      "sourceName": "云南省公共资源交易信息网",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": ""
+    },
+    {
+      "sourceId": "chengezhao",
+      "sourceName": "诚E招电子采购交易平台",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": "栏目分页当前覆盖范围内未命中关键词；全量检索接口 /cms/search.json 返回模板不可解析，非'平台无公告'。"
+    },
+    {
+      "sourceId": "chinabidding",
+      "sourceName": "采购与招标网",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": "移动端列表当前扫描范围内未命中关键词；该站无关键词检索接口，逐页扫描覆盖有限，非'平台无公告'。"
+    }
+  ],
+  "sourceSummary": {
+    "success": 0,
+    "empty": 4,
+    "failed": 0
+  },
+  "counts": {
+    "fetched": 0,
+    "excluded": 0,
+    "duplicate": 0,
+    "inserted": 0,
+    "updated": 0,
+    "mergedSources": 0,
+    "notices": 0,
+    "projects": 0
+  },
+  "collectResult": "success",
+  "saveResult": "success",
+  "buildResult": "success",
+  "deployResult": "pending-deploy",
+  "verifyResult": "not-verified",
+  "dataSavedAt": "2026-11-22T10:13:11.614Z",
+  "lastSuccessCollectedAt": "2026-11-22T10:13:11.614Z",
+  "lastDeployedAt": null,
+  "lastDeployedRunId": null,
+  "lastPublishedDataAt": null,
+  "database": {
+    "before": {
+      "exists": false,
+      "integrity": "missing",
+      "note": "首次运行无数据库，需安全初始化"
+    },
+    "after": {
+      "exists": true,
+      "integrity": "ok",
+      "notices": 0
+    }
+  },
+  "initializedFirstRun": true,
+  "message": "",
+  "build": {
+    "result": "success",
+    "files": 7
+  }
+}
