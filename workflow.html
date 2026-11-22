@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>烟草招投标全流程工作台 · 本地 Demo</title>
+<link rel="stylesheet" href="workflow-styles.css">
+</head>
+<body>
+<div class="demo-banner">本地完整 Demo · 浏览器本地存储模拟审批/附件/标书库 · <strong>数据不跨人共享，不可用于真实投标</strong></div>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark">烟机</div><div><b>招投标全流程工作台</b><span>采集 → 评分 → 审批 → 标书</span></div></div>
+    <div class="role-box">
+      <label>当前角色</label>
+      <div class="role-btns">
+        <button class="role-btn active" data-role="sales">片区销售</button>
+        <button class="role-btn" data-role="manager">公司高层</button>
+        <button class="role-btn" data-role="admin">管理员</button>
+      </div>
+      <div id="roleName" class="role-name">滇中片区经理（模拟）</div>
+    </div>
+    <nav>
+      <button class="nav active" data-page="overview">总览</button>
+      <button class="nav" data-page="pipeline">商机与分派</button>
+      <button class="nav" data-page="approval">投标审批</button>
+      <button class="nav" data-page="docs">标书与文档</button>
+    </nav>
+    <div class="side-foot">数据源：34 条真实公告<br>配置：服务区域/预算/资质/经理为模拟</div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div><h1 id="pageTitle">总览</h1><p id="pageSub">全流程闭环演示，所有操作仅保存在本机浏览器</p></div>
+      <div class="top-actions">
+        <button id="resetBtn" class="btn ghost">重置演示数据</button>
+        <button id="exportAllBtn" class="btn">导出流程 JSON</button>
+      </div>
+    </header>
+
+    <section class="page active" id="page-overview">
+      <div class="stats" id="stats"></div>
+      <div class="grid2">
+        <div class="card"><h3>流程状态</h3><div id="flowStatus" class="flow"></div></div>
+        <div class="card"><h3>风险提示汇总</h3><div id="riskSummary"></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-pipeline">
+      <div class="filters">
+        <input id="kw" placeholder="搜索标题/采购单位">
+        <select id="ownerFilter"><option value="">全部负责人</option></select>
+        <select id="riskFilter"><option value="">全部风险</option><option value="高">高风险</option><option value="中">中风险</option><option value="低">低风险</option></select>
+        <button id="reassignBtn" class="btn ghost">按片区重新分派</button>
+      </div>
+      <table class="table" id="noticeTable"></table>
+    </section>
+
+    <section class="page" id="page-approval">
+      <div class="grid2">
+        <div class="card"><h3>待我申请 / 待审批</h3><div id="approvalList"></div></div>
+        <div class="card"><h3>审批操作说明</h3><p class="muted">片区销售可将商机提交为投标申请；公司高层可批准或驳回。批准后，销售可进入“标书与文档”上传模板与竞标要求。</p><div id="approvalHelp"></div></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-docs">
+      <div class="grid2">
+        <div class="card"><h3>已批准投标项</h3><div id="approvedList"></div></div>
+        <div class="card"><h3>标书库（模拟资源）</h3><div id="libraryList"></div></div>
+      </div>
+      <div class="card full">
+        <h3>标书草稿生成与 Word 导出</h3>
+        <div id="draftWorkspace"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="data/app-data.js"></script>
+<script src="workflow-app.js"></script>
+</body>
+</html>

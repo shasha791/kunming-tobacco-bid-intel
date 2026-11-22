@@ -271,4 +271,6 @@ details summary{cursor:pointer;color:var(--brand)}
 
 .simulation-banner{margin:12px 24px 0;padding:10px 14px;border:1px solid #E3B341;border-left:4px solid #C8860D;background:#FFF8E6;color:#6B4A00;border-radius:8px;font-size:13px;line-height:1.6}
 .simulation-banner strong{color:#8A5A00}
+.workflow-link{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border-radius:8px;background:var(--brand);color:#fff;text-decoration:none;font-size:12px;white-space:nowrap;align-self:flex-start}
+.workflow-link:hover{background:var(--brand2)}
 @media(max-width:760px){.simulation-banner{margin:10px 16px 0;font-size:12px}}
