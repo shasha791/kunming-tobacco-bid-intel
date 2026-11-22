@@ -30,6 +30,8 @@ const status = {
   deployedBeijing: beijing,
   note: "由 GitHub Actions 发布步骤生成；本地构建不产生此文件。"
 };
+// main 分支不跟踪 data/ 目录，发布步骤恢复 main 后该目录可能不存在。
+fs.mkdirSync(path.join(ROOT, "data"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "data", "deploy-status.js"), `window.DEPLOY_STATUS = ${JSON.stringify(status, null, 2)};\n`);
 fs.writeFileSync(path.join(ROOT, "data", "deploy-status.json"), JSON.stringify(status, null, 2));
 console.log(`部署标记: runId=${status.runId} dataVersion=${status.dataVersion} ${beijing}`);

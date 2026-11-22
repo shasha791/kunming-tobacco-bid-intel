@@ -210,9 +210,9 @@ jobs:
           # 再切换到部署分支：只发布 site 内容，删除的是 git 跟踪文件，不碰 cloud-output
           git checkout -B gh-pages-deploy
           git rm -rf . >/dev/null 2>&1 || true
-          # 删除 cloud-state 遗留的未跟踪 state/，禁止把数据库和运行摘要发布到公开站点
-          rm -rf state
+          # 复制站点后清理所有未跟踪的运行目录，禁止把数据库、原始正文和运行摘要发布到公开站点
           cp -r cloud-output/site/. .
+          rm -rf state cloud-output _site
           touch .nojekyll
           git add -A
           git commit -m "Publish site $(date -u '+%F %T')" || echo "No site changes."
