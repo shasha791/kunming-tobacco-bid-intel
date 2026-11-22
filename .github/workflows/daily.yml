@@ -203,12 +203,15 @@ jobs:
           PAGES_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          # 先在完整工作区生成部署标记（切换分支并清理后 scripts/ 将不存在）
+          # 上一步为保存状态切换到 cloud-state 分支，scripts/ 已不在工作区；先恢复 main 再生成部署标记。
+          git checkout main
           node scripts/write-deploy-status.js
           cp data/deploy-status.js data/deploy-status.json cloud-output/site/data/
           # 再切换到部署分支：只发布 site 内容，删除的是 git 跟踪文件，不碰 cloud-output
           git checkout -B gh-pages-deploy
           git rm -rf . >/dev/null 2>&1 || true
+          # 删除 cloud-state 遗留的未跟踪 state/，禁止把数据库和运行摘要发布到公开站点
+          rm -rf state
           cp -r cloud-output/site/. .
           touch .nojekyll
           git add -A

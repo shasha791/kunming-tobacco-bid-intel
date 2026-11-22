@@ -8,7 +8,15 @@ const path = require("node:path");
 
 const ROOT = path.join(__dirname, "..");
 const run = JSON.parse(fs.readFileSync(path.join(ROOT, "cloud-output", "run-status.json"), "utf8"));
-const app = fs.readFileSync(path.join(ROOT, "data", "app-data.js"), "utf8");
+// 发布步骤工作区可能已从 main 切换到 cloud-state，根目录 data/app-data.js 不存在；
+// 优先读取 artifact 中的公开站点数据，保证仍能提取真实数据版本。
+const appCandidates = [
+  path.join(ROOT, "cloud-output", "site", "data", "app-data.js"),
+  path.join(ROOT, "data", "app-data.js")
+];
+const appPath = appCandidates.find((p) => fs.existsSync(p));
+if (!appPath) throw new Error("找不到 app-data.js，无法生成部署标记");
+const app = fs.readFileSync(appPath, "utf8");
 const m = app.match(/"generatedAt"\s*:\s*"([^"]+)"/);
 const deployedAt = new Date();
 const bj = new Date(deployedAt.getTime() + 8 * 3600 * 1000);
