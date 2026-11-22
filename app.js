@@ -520,7 +520,8 @@
       workspace: ["我的工作台", "待处理、即将截止、已关注与待核实"],
       people: ["人员与分派", "真实人员尚未配置 · 全部待分派"],
       push: ["订阅推送", "渠道未配置 · 无推送任务"],
-      sources: ["采集来源", "来源覆盖、实测状态与采集结果"]
+      sources: ["采集来源", "来源覆盖、实测状态与采集结果"],
+      workflow: ["全流程工作台", "在同一网页内完成公告筛选、审批、标书草稿与 Word 导出"]
     };
     document.getElementById("pageTitle").textContent = (titles[page] || ["", ""])[0];
     document.getElementById("pageSubtitle").textContent = (titles[page] || ["", ""])[1];
@@ -572,7 +573,7 @@
     document.querySelectorAll("#workspaceTabs button").forEach((b) => b.onclick = () => { state.ws = b.dataset.ws; document.querySelectorAll("#workspaceTabs button").forEach((x) => x.classList.toggle("active", x === b)); renderWorkspace(); });
     window.addEventListener("hashchange", handleHash);
     function handleHash() {
-      const m = location.hash.match(/^#(home|activity|detail|workspace|people|push|sources)(?:\/(.+))?$/);
+      const m = location.hash.match(/^#(home|activity|detail|workspace|people|push|sources|workflow)(?:\/(.+))?$/);
       if (m) {
         if (m[1] === "detail" && m[2]) { state.selectedId = decodeURIComponent(m[2]); state.detail = ALL.find((x) => x.id === state.selectedId) || state.detail; }
         showPage(m[1]);

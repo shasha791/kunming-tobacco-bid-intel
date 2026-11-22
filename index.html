@@ -40,6 +40,9 @@
         <button class="nav-item" type="button" data-page="sources">
           <span class="nav-ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></svg></span>采集来源
         </button>
+        <button class="nav-item" type="button" data-page="workflow">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M4 7h6M4 12h6M4 17h6M14 5h6v14h-6zM10 7l4 0M10 12l4 0M10 17l4 0"/></svg></span>全流程工作台
+        </button>
       </div>
     </nav>
     <div class="sidebar-foot"><span class="status-dot"></span><span id="sidebarStatus">数据加载中…</span></div>
@@ -156,6 +159,19 @@
           <div class="panel"><div class="panel-head"><h2>来源清单与实测状态</h2><span class="panel-note">推荐来源 ≠ 已接入</span></div><div class="panel-body" id="sourceList"></div></div>
           <div class="panel"><div class="panel-head"><h2>采集运行记录</h2><span class="panel-note">最近成功时间 · 成功/零结果/失败</span></div><div class="panel-body" id="sourceRuns"></div></div>
           <div class="panel"><div class="panel-head"><h2>关键词与匹配配置</h2><span class="panel-note">集中配置，可解释</span></div><div class="panel-body" id="configSummary"></div></div>
+        </section>
+
+        <!-- 全流程工作台：内嵌 Demo，查看公告→审批→标书在同一网页内完成 -->
+        <section class="page" id="page-workflow">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>烟草招投标全流程工作台（内嵌演示）</h2>
+              <span class="panel-note">与商机情报同页使用 · 本地存储模拟审批与附件 · <a href="workflow.html" target="_blank" rel="noopener">独立全屏打开</a></span>
+            </div>
+            <div class="panel-body">
+              <iframe class="workflow-frame" src="workflow.html" title="烟草招投标全流程工作台"></iframe>
+            </div>
+          </div>
         </section>
       </div>
     </div>
