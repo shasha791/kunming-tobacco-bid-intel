@@ -164,6 +164,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # 必须在切换分支前校验数据库：orphan 分支会删除 scripts/，之后无法 require 本地模块。
+          db_valid=false
+          if [ -s cloud-output/notices.sqlite ]; then
+            node -e "const {inspectDatabase}=require('./scripts/cloud-pipeline');const d=inspectDatabase('cloud-output/notices.sqlite');if(d.integrity!=='ok')process.exit(1)"
+            db_valid=true
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git ls-remote --exit-code --heads origin cloud-state >/dev/null 2>&1; then
@@ -179,8 +185,7 @@ jobs:
           if [ -f cloud-output/latest-run.json ]; then cp cloud-output/latest-run.json state/latest-run.json; fi
           # 数据库仅在本轮产出有效时保存，否则保留 cloud-state 中历史数据库
           db_saved=false
-          if [ -s cloud-output/notices.sqlite ]; then
-            node -e "const {inspectDatabase}=require('./scripts/cloud-pipeline');const d=inspectDatabase('cloud-output/notices.sqlite');if(d.integrity!=='ok')process.exit(1)"
+          if [ "$db_valid" = true ]; then
             cp cloud-output/notices.sqlite state/notices.sqlite
             db_saved=true
           fi
