@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>昆明二机·烟草机械商机情报</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand-block">
+      <div class="brand-mark">烟机</div>
+      <div>
+        <div class="brand-title"><span class="brand-short">昆明二机 · 商机情报</span></div>
+        <div class="brand-subtitle">昆明烟机集团二机有限公司<br>烟草机械招采情报</div>
+      </div>
+    </div>
+    <nav class="nav-list" aria-label="主导航">
+      <div class="nav-group">
+        <div class="nav-group-title">日常使用</div>
+        <button class="nav-item active" type="button" data-page="home">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/></svg></span>商机精选
+        </button>
+        <button class="nav-item" type="button" data-page="activity">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>全部公告
+        </button>
+        <button class="nav-item" type="button" data-page="workspace">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M5 3v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3M3 3h18M9 8h6M9 12h6"/></svg></span>我的工作台
+        </button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title">管理设置</div>
+        <button class="nav-item" type="button" data-page="people">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M17 11a3 3 0 0 0 0-6M18 20a5 5 0 0 0-2-4"/></svg></span>人员分派
+        </button>
+        <button class="nav-item" type="button" data-page="push">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 8-3 8h18s-3-1-3-8M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>订阅推送
+        </button>
+        <button class="nav-item" type="button" data-page="sources">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></svg></span>采集来源
+        </button>
+      </div>
+    </nav>
+    <div class="sidebar-foot"><span class="status-dot"></span><span id="sidebarStatus">数据加载中…</span></div>
+  </aside>
+
+  <main class="main">
+    <header class="mobile-header">
+      <div class="mobile-brand-mark">烟机</div>
+      <div class="mobile-brand-copy"><strong>昆明二机 · 商机情报</strong><span>烟草机械招采情报</span></div>
+      <span class="mobile-report-status"><span class="status-dot"></span><span id="mobileStatus">—</span></span>
+      <nav class="mobile-nav" id="mobileNav" aria-label="移动导航"></nav>
+    </header>
+
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="page-head">
+          <div class="command-copy">
+            <h1 id="pageTitle">商机精选</h1>
+            <p id="pageSubtitle">值得关注的真实项目，来自公开招采公告</p>
+          </div>
+          <div class="update-note" id="updateNote"></div>
+        </div>
+        <div class="category-tabs" role="group" aria-label="商机分类筛选">
+          <button class="category-tab active" type="button" data-global-category="">全部</button>
+          <button class="category-tab" type="button" data-global-category="A">A 明确相关</button>
+          <button class="category-tab" type="button" data-global-category="B">B 待核实</button>
+          <button class="category-tab" type="button" data-global-category="C">C 历史追踪</button>
+          <button class="category-tab" type="button" data-global-category="D">D 本公司采购</button>
+          <button class="category-tab" type="button" data-global-category="E">E 无关排除</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="simulationBanner" class="simulation-banner" hidden></div>
+
+    <div class="content">
+      <div class="page-inner">
+        <!-- 首页 -->
+        <section class="page active" id="page-home">
+          <div class="stat-summary" id="homeStats"></div>
+          <details class="data-disclosure">
+            <summary>数据说明（统计口径 · 规则版本 · 去重方法）</summary>
+            <div class="disclosure-body" id="dataBanner"></div>
+          </details>
+          <div class="home-columns">
+            <div class="home-main">
+              <div class="section-head"><h2>当前可关注的真实项目</h2><span class="note" id="homeFeaturedNote"></span></div>
+              <div class="feed" id="homeFeatured"></div>
+            </div>
+            <aside class="home-side">
+              <div class="section-head"><h2>提醒</h2></div>
+              <div class="side-notes" id="homeDeadlines"></div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 全部公告 -->
+        <section class="page" id="page-activity">
+          <div class="filter-bar" id="activityFilters">
+            <input type="search" id="filterKeyword" placeholder="搜索标题 / 采购单位 / 内容关键词">
+            <select id="filterCategory"><option value="">全部分类</option><option value="A">A 明确相关</option><option value="B">B 待核实</option><option value="C">C 历史追踪</option><option value="D">D 本公司采购</option><option value="E">E 无关排除</option></select>
+            <select id="filterValidity"><option value="">全部有效性</option><option value="当前有效">当前有效</option><option value="有效性待核实">有效性待核实</option><option value="已截止">已截止</option><option value="历史追踪">历史追踪</option></select>
+            <select id="filterSort"><option value="publish">按发布时间</option><option value="deadline">按截止时间</option><option value="score">按评分</option></select>
+            <button class="btn-ghost" type="button" id="resetFilters">重置</button>
+            <button class="btn-ghost" type="button" id="exportCsv">导出 CSV</button>
+          </div>
+          <details class="advanced-filters">
+            <summary>更多筛选（地区 / 阶段 / 负责人）</summary>
+            <div class="filter-bar" style="margin-top:10px">
+              <select id="filterRegion"><option value="">全部地区</option></select>
+              <select id="filterStage"><option value="">全部阶段</option><option>采购前</option><option>招标中</option><option>变更</option><option>结果</option></select>
+              <select id="filterOwner"><option value="">全部负责人</option></select>
+            </div>
+          </details>
+          <div class="result-meta" id="activityMeta"></div>
+          <div class="feed" id="activityList"></div>
+        </section>
+
+        <!-- 项目详情（从具体项目进入） -->
+        <section class="page" id="page-detail"><div id="detailContainer"></div></section>
+
+        <!-- 我的工作台 -->
+        <section class="page" id="page-workspace">
+          <div class="detail-tabs" id="workspaceTabs">
+            <button class="active" type="button" data-ws="mine">我负责的</button>
+            <button type="button" data-ws="pending">待处理/待分派</button>
+            <button type="button" data-ws="deadline">即将截止</button>
+            <button type="button" data-ws="watched">已关注/关键变化</button>
+            <button type="button" data-ws="unverified">待核实</button>
+          </div>
+          <div class="feed" id="workspaceList"></div>
+        </section>
+
+        <!-- 人员与分派规则 -->
+        <section class="page" id="page-people">
+          <div class="data-banner test-banner"><strong>真实人员尚未配置</strong>：未提供任何人员名单、内部标识、联系方式与负责范围。当前所有公告显示"待分派"，系统不自动指定负责人，也没有任何测试人员或虚假分派。</div>
+          <div class="panel"><div class="panel-head"><h2>人员清单</h2><span class="panel-note">姓名 · 区域 · 产品 · 优先级 · 接收条件</span></div><div class="panel-body" id="peopleList"></div></div>
+          <div class="panel"><div class="panel-head"><h2>分派规则</h2></div><div class="panel-body" id="assignmentRules"></div></div>
+          <div class="panel"><div class="panel-head"><h2>待分派公告</h2><span class="panel-note">无人匹配区域/产品条件</span></div><div class="panel-body" id="unassignedList"></div></div>
+        </section>
+
+        <!-- 订阅与推送 -->
+        <section class="page" id="page-push">
+          <div class="data-banner test-banner"><strong>所有渠道均未配置，真实人员与收件人未提供</strong>：无接收人、无推送任务，不向任何真实人员或生产群发送消息。密钥使用环境变量，不写入前端与代码仓库。</div>
+          <div class="panel"><div class="panel-head"><h2>渠道配置状态</h2></div><div class="panel-body" id="channelList"></div></div>
+          <div class="panel"><div class="panel-head"><h2>订阅配置</h2><span class="panel-note">订阅保存成功 ≠ 推送任务生效</span></div><div class="panel-body" id="subscriptionList"></div></div>
+          <div class="panel"><div class="panel-head"><h2>推送预览</h2><span class="panel-note" id="pushPreviewNote"></span></div><div class="panel-body" id="pushPreview"></div></div>
+        </section>
+
+        <!-- 来源与运行状态 -->
+        <section class="page" id="page-sources">
+          <div class="panel"><div class="panel-head"><h2>自动更新状态</h2><span class="panel-note">云端每日采集 · 目标北京时间 08:00 前完成</span></div><div class="panel-body" id="autoStatus"></div></div>
+          <div class="panel"><div class="panel-head"><h2>来源清单与实测状态</h2><span class="panel-note">推荐来源 ≠ 已接入</span></div><div class="panel-body" id="sourceList"></div></div>
+          <div class="panel"><div class="panel-head"><h2>采集运行记录</h2><span class="panel-note">最近成功时间 · 成功/零结果/失败</span></div><div class="panel-body" id="sourceRuns"></div></div>
+          <div class="panel"><div class="panel-head"><h2>关键词与匹配配置</h2><span class="panel-note">集中配置，可解释</span></div><div class="panel-body" id="configSummary"></div></div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="data/app-data.js"></script>
+<script src="data/run-status.js"></script>
+<script src="data/deploy-status.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

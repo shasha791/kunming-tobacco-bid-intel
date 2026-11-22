@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "1.0.0",
+  "updatedAt": "2026-11-18",
+  "mode": "preview-only",
+  "notice": "真实人员、收件人和渠道密钥均未提供：渠道全部显示'未配置'，无接收人，不生成任何推送任务，不向真实人员或生产群发送消息。渠道可用性须在启用前重新验证。密钥使用环境变量，不写入前端和代码仓库。",
+  "channels": [
+    {
+      "id": "wecom",
+      "label": "企业微信",
+      "configured": false,
+      "status": "未配置",
+      "envVars": ["WECOM_WEBHOOK_URL"],
+      "note": "连接器状态需在启用前重新验证。测试模式仅生成预览，不调用真实接口。"
+    },
+    {
+      "id": "feishu",
+      "label": "飞书",
+      "configured": false,
+      "status": "未配置",
+      "envVars": ["FEISHU_WEBHOOK_URL"],
+      "note": "连接器状态需在启用前重新验证。测试模式仅生成预览。"
+    },
+    {
+      "id": "email",
+      "label": "邮件",
+      "configured": false,
+      "status": "未配置",
+      "envVars": ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "REPORT_TO"],
+      "note": "收件人未提供；不编造。测试模式仅生成预览。"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": "sub-daily",
+      "label": "定时商机摘要（未生效）",
+      "frequency": "每工作日 09:00",
+      "channel": "email",
+      "minScore": 45,
+      "acceptUnverifiedLeads": true,
+      "acceptKeyChanges": true,
+      "people": [],
+      "status": "未配置（测试预览）"
+    },
+    {
+      "id": "sub-high-match",
+      "label": "高匹配新项目提醒（未生效）",
+      "frequency": "实时（采集后）",
+      "channel": "wecom",
+      "minScore": 65,
+      "acceptUnverifiedLeads": false,
+      "acceptKeyChanges": true,
+      "people": [],
+      "status": "未配置（测试预览）"
+    },
+    {
+      "id": "sub-key-change",
+      "label": "已关注项目关键变化提醒（未生效）",
+      "frequency": "实时（采集后）",
+      "channel": "feishu",
+      "minScore": 0,
+      "acceptUnverifiedLeads": false,
+      "acceptKeyChanges": true,
+      "people": [],
+      "status": "未配置（测试预览）",
+      "note": "不受评分阈值限制：已关注项目的澄清/延期/终止/中标等关键变化独立提醒。"
+    }
+  ],
+  "deliveryPolicy": {
+    "dedupeByPersonAndNotice": true,
+    "keyChangeCanRepush": true,
+    "keyChangeMustExplainDifference": true,
+    "limitedRetry": true,
+    "maxRetries": 2,
+    "judgeByActualReceipt": true,
+    "uncertainResult": "标明结果不确定，避免盲目重试造成重复发送",
+    "statuses": ["待发送", "发送中", "成功", "失败"],
+    "saveSuccessVsEffect": true,
+    "saveSuccessNote": "订阅保存成功 ≠ 推送任务生效；分别显示。"
+  },
+  "testMode": {
+    "enabled": true,
+    "output": "reports/push-preview.json + 前端'订阅与推送'页预览",
+    "noRealSending": true
+  }
+}

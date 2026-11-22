@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2026-11-22",
+  "status": "模拟人员已配置（演示用）",
+  "simulation": {
+    "enabled": true,
+    "label": "模拟片区经理·演示用途",
+    "warning": "以下人员均为模拟角色，无真实姓名、联系方式或组织归属，不可用于真实分派、推送或投标决策。"
+  },
+  "notice": "按用户要求填入模拟片区经理，用于演示区域+产品/型号分派链路。真实人员名单、内部标识、联系方式与负责范围未提供；启用正式分派前必须由业务确认并替换。",
+  "people": [
+    {
+      "personId": "SIM-MGR-DZ",
+      "name": "滇中片区经理（模拟）",
+      "role": "片区经理（模拟）",
+      "simulated": true,
+      "zones": ["滇中片区"],
+      "regions": ["云南"],
+      "products": ["machine", "overhaul", "upgrade", "parts"],
+      "models": ["SQ34A", "SQ35", "SQ39"],
+      "priority": 1
+    },
+    {
+      "personId": "SIM-MGR-DN",
+      "name": "滇南片区经理（模拟）",
+      "role": "片区经理（模拟）",
+      "simulated": true,
+      "zones": ["滇南片区"],
+      "regions": ["云南"],
+      "products": ["machine", "overhaul", "upgrade", "parts"],
+      "models": ["SQ34A", "SQ35", "SQ39"],
+      "priority": 2
+    },
+    {
+      "personId": "SIM-MGR-DX",
+      "name": "滇西片区经理（模拟）",
+      "role": "片区经理（模拟）",
+      "simulated": true,
+      "zones": ["滇西片区"],
+      "regions": ["云南"],
+      "products": ["machine", "overhaul", "upgrade", "parts"],
+      "models": ["SQ34A", "SQ35", "SQ39"],
+      "priority": 3
+    }
+  ],
+  "rules": {
+    "matchByRegionAndProduct": true,
+    "noMatch": "进入待分派（非云南项目仍保持待分派，不伪造负责人）",
+    "multiMatch": "按priority确定主负责人，其余为协同；优先级相同则取配置顺序在前为主",
+    "allowManualOverride": true,
+    "noBlanketPush": true,
+    "note": "分派仅按区域+产品/型号匹配，不把所有公告无差别推给所有人。模拟人员只用于演示。"
+  },
+  "manualOverrides": []
+}

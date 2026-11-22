@@ -1,0 +1,10 @@
+data/*.json
+data/*.js
+data/*.sqlite
+data/*.bak-*
+cloud-output/
+_site/
+screenshots/
+reports/
+node_modules/
+.DS_Store

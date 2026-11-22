@@ -1,0 +1,17 @@
+{
+  "name": "kunming-tobacco-bid-intel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "昆明二机·烟草机械商机情报 — 公开招采信息采集与展示（无外部发送）",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "crawl": "node scripts/crawl.js",
+    "check-links": "node scripts/check-links.js",
+    "process": "node scripts/process.js",
+    "cloud": "node scripts/cloud-pipeline.js",
+    "build:site": "node scripts/build-public-site.js",
+    "test": "node test/selftest.js"
+  }
+}
