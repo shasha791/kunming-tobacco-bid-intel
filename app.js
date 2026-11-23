@@ -605,61 +605,72 @@
     bindItemClicks(box);
   }
 
-  function renderVerification() {
-    const box = document.getElementById("verificationReport");
-    if (!box) return;
-    const V = window.MANUAL_VERIFICATION;
-    if (!V) { box.innerHTML = '<div class="empty-panel">采集验证数据未加载</div>'; return; }
-    const s = V.summary || {};
-    const c = V.classification || {};
-    const src = V.source || {};
-    const rows = (V.keywordResults || []).map((r) => {
+  function verificationSourceHtml(item) {
+    const s = item.summary || {};
+    const c = item.classification || {};
+    const src = item.source || {};
+    const rows = (item.keywordResults || []).map((r) => {
       const cls = r.recordCount === 0 ? "bad" : r.quality && r.quality.indexOf("过宽") >= 0 ? "warn" : "good";
       const samples = (r.sampleTitles || []).slice(0, 2).map((t) => `<div class="verify-sample">· ${esc(t)}</div>`).join("");
       return `<tr>
         <td><b>${esc(r.keyword)}</b></td>
         <td><b>${r.recordCount}</b></td>
-        <td>${r.pageCount}</td>
+        <td>${r.pageCount == null ? "—" : r.pageCount}</td>
         <td><span class="chip ${cls}">${esc(r.quality || r.status)}</span></td>
         <td>${samples || '<span class="muted">无样本</span>'}</td>
       </tr>`;
     }).join("");
-    box.innerHTML = `
-      <div class="daily-cover">
-        <div>
-          <p class="daily-kicker">COLLECTION VERIFICATION · 人工路径复核</p>
-          <h2>中烟电子采购平台关键词验证</h2>
-          <p>${esc(src.method || "")}｜测试窗口：${esc(src.testWindowBeijing || "")}｜公开搜索，未登录、未绕验证码、未下载招标文件。</p>
+    return `
+      <section class="daily-section verification-source">
+        <div class="daily-cover">
+          <div>
+            <p class="daily-kicker">COLLECTION VERIFICATION · ${esc(src.sourceId || "SOURCE").toUpperCase()}</p>
+            <h2>${esc(src.sourceName || "来源")}关键词验证</h2>
+            <p>${esc(src.method || "")}｜测试窗口：${esc(src.testWindowBeijing || "")}｜${esc(src.accessBoundary || "")}</p>
+          </div>
+          <div class="daily-issue"><span>关键词</span><b>${s.keywordCount || (item.keywordResults || []).length}</b><small>个</small></div>
         </div>
-        <div class="daily-issue"><span>关键词</span><b>${s.keywordCount || (V.keywordResults || []).length}</b><small>个</small></div>
-      </div>
-      <div class="daily-stats">
-        <span><b>${s.keywordHitCount || 0}</b> 个有命中</span>
-        <span><b>${s.keywordZeroCount || 0}</b> 个零命中</span>
-        <span><b>${s.sumOfKeywordRecords || 0}</b> 条关键词命中累加</span>
-        <span>去重公告数：<b>未抓取全部正文</b></span>
-      </div>
-      <section class="daily-section">
-        <div class="section-head"><h2>关键词清洗结果</h2><span class="note">记录数按平台结果页原样保留，不做业务去重</span></div>
+        <div class="daily-stats">
+          <span><b>${s.keywordHitCount || 0}</b> 个有命中</span>
+          <span><b>${s.keywordZeroCount || 0}</b> 个零命中</span>
+          <span><b>${s.sumOfKeywordRecords || 0}</b> 条关键词命中累加</span>
+          <span>去重公告数：<b>${s.uniqueNoticeCount == null ? "未抓取全部正文" : s.uniqueNoticeCount}</b></span>
+          ${src.indexRecordCount ? `<span>公开索引：<b>${src.indexRecordCount}</b> 条</span>` : ""}
+        </div>
+        <div class="section-head"><h2>关键词清洗结果</h2><span class="note">命中数按公开索引/结果页原样保留，不做业务去重</span></div>
         <div class="table-wrap"><table class="table">
           <thead><tr><th>关键词</th><th>命中</th><th>页数</th><th>质量判断</th><th>可见样本</th></tr></thead>
           <tbody>${rows}</tbody>
         </table></div>
-      </section>
-      <section class="daily-section">
         <div class="section-head"><h2>清洗规则</h2></div>
-        <ol class="verify-list">${(V.cleaningRules || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ol>
-      </section>
-      <section class="daily-section">
+        <ol class="verify-list">${(item.cleaningRules || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ol>
         <div class="section-head"><h2>结论与建议</h2></div>
         <ul class="verify-list">
           ${(c.recommendedCoreKeywords || []).length ? `<li><b>建议保留核心词：</b>${c.recommendedCoreKeywords.map(esc).join("、")}</li>` : ""}
           ${(c.broadKeywordNeedFilter || []).length ? `<li><b>需组合过滤：</b>${c.broadKeywordNeedFilter.map(esc).join("、")}</li>` : ""}
           ${(c.zeroHitNeedReplace || []).length ? `<li><b>零命中需替换：</b>${c.zeroHitNeedReplace.map(esc).join("、")}；建议改为 ${(c.suggestedReplacementKeywords || []).map(esc).join("、")}</li>` : ""}
-          ${(V.conclusion || []).map((x) => `<li>${esc(x)}</li>`).join("")}
+          ${(item.conclusion || []).map((x) => `<li>${esc(x)}</li>`).join("")}
         </ul>
-      </section>
-      <p class="skip-note">数据边界：${esc(s.note || "")} 本页只展示公开搜索结果与清洗结论，不代表已成功自动抓取全部命中公告。</p>`;
+        <p class="skip-note">数据边界：${esc(s.note || "")} 本页只展示公开搜索结果与清洗结论，不代表已成功自动抓取全部命中公告。</p>
+      </section>`;
+  }
+
+  function renderVerification() {
+    const box = document.getElementById("verificationReport");
+    if (!box) return;
+    const V = window.MANUAL_VERIFICATION;
+    if (!V) { box.innerHTML = '<div class="empty-panel">采集验证数据未加载</div>'; return; }
+    const list = Array.isArray(V.sourceVerifications) && V.sourceVerifications.length
+      ? V.sourceVerifications
+      : [{ source: V.source, cleaningRules: V.cleaningRules, summary: V.summary, classification: V.classification, keywordResults: V.keywordResults, conclusion: V.conclusion }];
+    box.innerHTML = `<div class="daily-cover">
+        <div>
+          <p class="daily-kicker">COLLECTION VERIFICATION · SOURCE COVERAGE</p>
+          <h2>公开采集来源人工路径复核</h2>
+          <p>已接入 ${list.length} 个来源：${list.map((x) => esc(x.source?.sourceName || "来源")).join(" / ")}。仅使用公开页面，未登录、未绕验证码、未下载招标文件。</p>
+        </div>
+        <div class="daily-issue"><span>来源</span><b>${list.length}</b><small>个</small></div>
+      </div>${list.map(verificationSourceHtml).join("")}`;
   }
 
   function showPage(page) {
@@ -676,7 +687,7 @@
       people: ["人员与分派", "真实人员尚未配置 · 全部待分派"],
       push: ["订阅推送", "渠道未配置 · 无推送任务"],
       sources: ["采集来源", "来源覆盖、实测状态与采集结果"],
-      verification: ["采集验证", "中烟电子采购平台关键词人工路径复核与清洗结果"],
+      verification: ["采集验证", "公开采集来源关键词人工路径复核与清洗结果"],
       workflow: ["全流程工作台", "在同一网页内完成公告筛选、审批、标书草稿与 Word 导出"]
     };
     document.getElementById("pageTitle").textContent = (titles[page] || ["", ""])[0];
