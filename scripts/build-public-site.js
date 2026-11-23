@@ -17,6 +17,7 @@ const PUBLIC_FILES = [
   "workflow-app.js",
   "data/app-data.js",       // process.js 生成的展示数据（已过滤为公开字段）
   "data/run-status.js",     // 前端运行状态摘要（安全字段）
+  "data/manual-verification.js", // 人工路径关键词验证清洗数据（公开字段）
   "data/run-status.json"    // 同内容的 JSON，便于排查
 ];
 
