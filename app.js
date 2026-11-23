@@ -3,6 +3,17 @@
   const DATA = window.APP_DATA || { notices: [], sourceStatus: {}, counts: {}, previewSummary: {}, config: {} };
   const ALL = DATA.notices || [];
   const state = { page: "home", globalCategory: "", selectedId: null, ws: "mine", detailTab: "info", detail: null };
+  const READ_KEY = "kunming-tobacco-bid-read-v1";
+  function loadReadIds() {
+    try { return new Set(JSON.parse(localStorage.getItem(READ_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  const readIds = loadReadIds();
+  function persistReadIds() {
+    try { localStorage.setItem(READ_KEY, JSON.stringify([...readIds])); } catch (e) { /* 本地存储不可用时仅保留本次会话 */ }
+  }
+  function isUnread(n) { return n && !readIds.has(n.id); }
+  function onlyUnreadEnabled() { const el = document.getElementById("onlyUnread"); return Boolean(el && el.checked); }
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
@@ -68,7 +79,7 @@
     const s = n.score || {};
     if (s.confirmedScore == null) return "";
     const u = s.unknownCount || 0;
-    return `<span class="item-score-mini" title="草案评分：已确认得分，未确认维度不计满分。评分不代表中标概率。">草案评分 <b>${s.confirmedScore}</b>${u ? ` · ${u}项待确认` : ""}</span>`;
+    return `<span class="ai-score-badge" title="AI 评分草案：已确认得分，未确认维度不计满分。评分不代表中标概率。"><span>AI评分</span><b>${s.confirmedScore}</b>${u ? `<small>${u}项待确认</small>` : ""}</span>`;
   }
   function validityTag(n) {
     const v = n.validity || "有效性待核实";
@@ -110,6 +121,7 @@
       ${n.classificationReason ? `<div class="item-why"><span class="why-label">匹配依据：</span>${esc(n.classificationReason)}</div>` : ""}
       <!-- 标签：只保留帮助判断的少量状态 -->
       <div class="item-tags">
+        ${isUnread(n) ? '<span class="tag unread">未读</span>' : ""}
         ${validityTag(n)}
         <span class="tag">${esc(catLabel(n))}</span>
         ${n.isKeyChange ? '<span class="tag change">关键变化</span>' : ""}
@@ -148,7 +160,33 @@
     });
   }
 
+  function bindFocusClicks(container) {
+    container.querySelectorAll(".js-focus-item").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.id)));
+    const more = container.querySelector("#focusMore");
+    if (more) more.addEventListener("click", () => showPage("activity"));
+  }
+
+  function renderFocus() {
+    const box = document.getElementById("homeFocus");
+    if (!box) return;
+    let list = currentPageNotices().filter((n) => n.score?.confirmedScore != null);
+    if (onlyUnreadEnabled()) list = list.filter(isUnread);
+    list = list.slice().sort((a, b) => (b.score?.confirmedScore || 0) - (a.score?.confirmedScore || 0)).slice(0, 5);
+    box.innerHTML = `<div class="focus-head">
+        <div><span class="focus-kicker">当前焦点</span><h2>按 AI 评分排序的真实公告</h2></div>
+        <button class="mini-btn" type="button" id="focusMore">完整榜单 →</button>
+      </div>
+      <div class="focus-list">${list.length ? list.map((n, i) => `
+        <button class="focus-row js-focus-item" type="button" data-id="${esc(n.id)}">
+          <span class="focus-rank">${String(i + 1).padStart(2, "0")}</span>
+          <span class="focus-title">${esc(n.title)}</span>
+          <span class="focus-score">${n.score.confirmedScore}</span>
+        </button>`).join("") : '<div class="empty-panel">当前筛选下暂无可排序公告</div>'}</div>`;
+    bindFocusClicks(box);
+  }
+
   function renderHome() {
+    renderFocus();
     const c = DATA.counts || {};
     const statuses = (DATA.sourceStatus || {}).statuses || [];
     // 紧凑一行统计：业务数字优先，管理信息降级到侧栏/管理页
@@ -178,7 +216,8 @@
     document.getElementById("updateNote").textContent = note;
 
     // 主栏：当前有效商机信息流
-    const featured = ALL.filter((n) => n.validity === "当前有效" && ["A", "B"].includes(n.category));
+    let featured = ALL.filter((n) => n.validity === "当前有效" && ["A", "B"].includes(n.category));
+    if (onlyUnreadEnabled()) featured = featured.filter(isUnread);
     const filtered = state.globalCategory ? featured.filter((n) => n.category === state.globalCategory) : featured;
     const ordered = [...filtered].sort((a, b) => (b.publishDate || "").localeCompare(a.publishDate || ""));
     const featuredBox = document.getElementById("homeFeatured");
@@ -230,6 +269,7 @@
         const o = n.assignment?.primary?.personId || "待分派";
         if (o !== owner) return false;
       }
+      if (onlyUnreadEnabled() && !isUnread(n)) return false;
       return true;
     });
     list.sort((a, b) => {
@@ -259,6 +299,7 @@
   function openDetail(id) {
     const n = ALL.find((x) => x.id === id);
     if (!n) return;
+    if (!readIds.has(id)) { readIds.add(id); persistReadIds(); }
     state.selectedId = id; state.detail = n; state.detailTab = "info";
     showPage("detail");
     renderDetail();
@@ -508,6 +549,62 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
 
+  function renderDaily() {
+    const box = document.getElementById("dailyReport");
+    if (!box) return;
+    const c = DATA.counts || {};
+    const R = window.CLOUD_RUN_STATUS || {};
+    const src = R.sourceSummary || {};
+    const p = bjParts(DATA.generatedAt) || { year: "", md: "日期待核实", hm: "" };
+    let statusText = "今日采集完成，日报已生成。";
+    if (R.status === "failed") statusText = "今日采集失败，当前日报基于上一次成功采集数据生成。";
+    else if (src.failed > 0) statusText = "部分来源采集异常，日报已生成。";
+    else if (src.success === 0) statusText = "今日采集完成，来源本轮均为零结果；当前日报基于已核验公告库生成。";
+    let pool = currentPageNotices();
+    if (onlyUnreadEnabled()) pool = pool.filter(isUnread);
+    const top = pool.filter((n) => n.isActionable || n.isKeyChange)
+      .sort((a, b) => (b.score?.confirmedScore || 0) - (a.score?.confirmedScore || 0)).slice(0, 5);
+    const archive = pool.slice().sort((a, b) => (b.publishDate || "").localeCompare(a.publishDate || ""));
+    box.innerHTML = `
+      <div class="daily-cover">
+        <div>
+          <p class="daily-kicker">KUNMING TOBACCO MACHINERY · DAILY</p>
+          <h2>${esc(p.md)} 烟草机械招采日报</h2>
+          <p>${esc(statusText)}</p>
+        </div>
+        <div class="daily-issue"><span>本期</span><b>${archive.length}</b><small>条公告</small></div>
+      </div>
+      <div class="daily-stats">
+        <span><b>${c.currentValid || 0}</b> 当前有效</span>
+        <span><b>${c.noticeCount || archive.length}</b> 真实公告</span>
+        <span><b>${c.A || 0}</b> A 明确相关</span>
+        <span><b>${c.B || 0}</b> B 待核实</span>
+        <span>来源：成功 ${src.success || 0} / 零结果 ${src.empty || 0} / 失败 ${src.failed || 0}</span>
+      </div>
+      <section class="daily-section">
+        <div class="section-head"><h2>TOP OPPORTUNITIES｜最值得跟进的商机</h2><span class="note">${top.length} 条重点 / 共 ${archive.length} 条</span></div>
+        <div class="daily-list">${top.length ? top.map((n, i) => {
+          const f = n.structured || {};
+          return `<button class="daily-row js-daily-item" type="button" data-id="${esc(n.id)}">
+            <span class="daily-rank">${String(i + 1).padStart(2, "0")}</span>
+            <span class="daily-body">
+              <span class="daily-meta">${esc(n.stage || "待核实")} · ${esc(n.noticeType || "待核实")} · ${esc(n.categoryLabel || n.category || "")}</span>
+              <span class="daily-title">${esc(n.title)}</span>
+              <span class="daily-fields">${esc(f.purchaser || "采购单位未披露")} · ${esc([f.province, f.city].filter(Boolean).join("/") || "地区待核实")} · 预算 ${esc(f.budget?.raw || "未披露")} · 截止 ${esc(formatDate(f.bidDeadline?.normalized))}</span>
+            </span>
+            <span class="daily-score">AI评分 <b>${n.score?.confirmedScore ?? "—"}</b></span>
+          </button>`;
+        }).join("") : '<div class="empty-panel">当前筛选下暂无达到重点条件的公告</div>'}</div>
+      </section>
+      <details class="daily-archive">
+        <summary>按发布日期查看全部公告</summary>
+        <div class="feed">${feedHtml(archive)}</div>
+      </details>
+      <p class="skip-note">日报由云端采集数据自动生成；评分与分派为规则草案，不代表中标概率，也不替代人工核验原公告。</p>`;
+    box.querySelectorAll(".js-daily-item").forEach((b) => b.addEventListener("click", () => openDetail(b.dataset.id)));
+    bindItemClicks(box);
+  }
+
   function showPage(page) {
     state.page = page;
     document.querySelectorAll(".nav-item").forEach((b) => b.classList.toggle("active", b.dataset.page === page));
@@ -515,8 +612,9 @@
     const el = document.getElementById("page-" + page); if (el) el.classList.add("active");
     const titles = {
       home: ["商机精选", "值得关注的真实项目，来自公开招采公告"],
-      activity: ["全部公告", "搜索与筛选所有已采集的真实公告"],
-      detail: ["项目详情", "结构化信息、原文证据与评分依据"],
+      activity: ["全部招标", "搜索与筛选所有已采集的真实招标公告"],
+      daily: ["招标日报", "按 AI 评分整理当天最值得跟进的真实商机"],
+      detail: ["项目详情", "结构化信息、原文证据与 AI 评分依据"],
       workspace: ["我的工作台", "待处理、即将截止、已关注与待核实"],
       people: ["人员与分派", "真实人员尚未配置 · 全部待分派"],
       push: ["订阅推送", "渠道未配置 · 无推送任务"],
@@ -527,6 +625,7 @@
     document.getElementById("pageSubtitle").textContent = (titles[page] || ["", ""])[1];
     if (page === "home") renderHome();
     if (page === "activity") renderActivity();
+    if (page === "daily") renderDaily();
     if (page === "detail") renderDetail();
     if (page === "workspace") renderWorkspace();
     if (page === "people") renderPeople();
@@ -565,6 +664,13 @@
       const el = document.getElementById(id);
       el.addEventListener("input", renderActivity); el.addEventListener("change", renderActivity);
     });
+    const unreadToggle = document.getElementById("onlyUnread");
+    if (unreadToggle) unreadToggle.addEventListener("change", () => {
+      if (state.page === "home") renderHome();
+      else if (state.page === "daily") renderDaily();
+      else if (state.page === "activity") renderActivity();
+      else if (state.page === "workspace") renderWorkspace();
+    });
     document.getElementById("resetFilters").onclick = () => {
       ["filterKeyword", "filterCategory", "filterRegion", "filterStage", "filterValidity", "filterOwner"].forEach((id) => document.getElementById(id).value = "");
       document.getElementById("filterSort").value = "publish"; renderActivity();
@@ -573,7 +679,7 @@
     document.querySelectorAll("#workspaceTabs button").forEach((b) => b.onclick = () => { state.ws = b.dataset.ws; document.querySelectorAll("#workspaceTabs button").forEach((x) => x.classList.toggle("active", x === b)); renderWorkspace(); });
     window.addEventListener("hashchange", handleHash);
     function handleHash() {
-      const m = location.hash.match(/^#(home|activity|detail|workspace|people|push|sources|workflow)(?:\/(.+))?$/);
+      const m = location.hash.match(/^#(home|activity|daily|detail|workspace|people|push|sources|workflow)(?:\/(.+))?$/);
       if (m) {
         if (m[1] === "detail" && m[2]) { state.selectedId = decodeURIComponent(m[2]); state.detail = ALL.find((x) => x.id === state.selectedId) || state.detail; }
         showPage(m[1]);

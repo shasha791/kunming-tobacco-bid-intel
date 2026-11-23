@@ -276,3 +276,56 @@ details summary{cursor:pointer;color:var(--brand)}
 .workflow-frame{width:100%;height:calc(100vh - 230px);min-height:620px;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff}
 .workflow-frame + .muted{margin-top:8px}
 @media(max-width:760px){.simulation-banner{margin:10px 16px 0;font-size:12px}}
+
+/* AIHOT 风格：只看未读 / AI 评分 / 当前焦点 */
+.unread-toggle{display:inline-flex;align-items:center;gap:6px;margin:0 0 16px auto;padding:7px 12px;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--ink2);font-size:13px;cursor:pointer;white-space:nowrap}
+.unread-toggle input{accent-color:var(--brand);margin:0}
+.ai-score-badge{display:inline-flex;align-items:center;gap:5px;margin-left:auto;padding:3px 9px;border:1px solid #BFD8C8;border-radius:14px;background:#EEF7F1;color:var(--ok);font-size:11px;white-space:nowrap}
+.ai-score-badge b{font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.ai-score-badge small{color:var(--muted);font-size:10px}
+.tag.unread{background:#E8F0FB;color:#315D8C;border-color:#C6D9EF}
+
+.focus-card{margin:0 0 14px;padding:16px 18px;background:linear-gradient(180deg,#FFFDF8,#F7F3EA);border:1px solid var(--line);border-radius:var(--radius)}
+.focus-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.focus-kicker{display:block;font-size:11px;letter-spacing:.08em;color:var(--brand);font-weight:600;text-transform:uppercase}
+.focus-head h2{margin:2px 0 0;font-size:16px}
+.focus-list{display:grid;gap:4px}
+.focus-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:7px 8px;border:0;border-radius:8px;background:transparent;cursor:pointer;color:var(--ink)}
+.focus-row:hover{background:#EFE8DA}
+.focus-rank{font-size:12px;font-variant-numeric:tabular-nums;color:var(--brand);font-weight:600;min-width:20px}
+.focus-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
+.focus-score{padding:2px 9px;border-radius:12px;background:var(--brand);color:#fff;font-size:12px;font-variant-numeric:tabular-nums}
+
+/* 招标日报 */
+.daily-report{max-width:900px;margin:0 auto;padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+.daily-cover{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.daily-kicker{margin:0 0 8px;font-size:11px;letter-spacing:.12em;color:var(--brand);font-weight:600}
+.daily-cover h2{margin:0 0 8px;font-size:30px;line-height:1.25}
+.daily-cover p:last-child{margin:0;color:var(--ink2);font-size:13px}
+.daily-issue{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;width:92px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.daily-issue span,.daily-issue small{font-size:11px;color:var(--muted)}
+.daily-issue b{font-size:28px;line-height:1.1;color:var(--ink)}
+.daily-stats{display:flex;flex-wrap:wrap;gap:8px 18px;padding:14px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink2)}
+.daily-stats b{font-size:16px;color:var(--ink)}
+.daily-section{padding:18px 0}
+.daily-list{display:grid;gap:8px}
+.daily-row{display:flex;gap:12px;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:pointer;color:var(--ink)}
+.daily-row:hover{border-color:var(--brand2)}
+.daily-rank{font-size:16px;font-weight:600;color:var(--brand);font-variant-numeric:tabular-nums;min-width:26px}
+.daily-body{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.daily-meta{font-size:12px;color:var(--muted)}
+.daily-title{font-size:15px;font-weight:600;line-height:1.45}
+.daily-fields{font-size:12px;color:var(--ink2)}
+.daily-score{flex:0 0 auto;align-self:flex-start;padding:4px 9px;border-radius:14px;background:#EEF7F1;color:var(--ok);font-size:11px;white-space:nowrap}
+.daily-score b{font-size:14px;color:var(--ink)}
+.daily-archive{border-top:1px solid var(--line);padding-top:14px}
+.daily-archive summary{cursor:pointer;color:var(--brand);font-size:13px;font-weight:600}
+
+@media(max-width:760px){
+  .unread-toggle{margin:0 0 12px 0}
+  .daily-report{padding:16px;border:0}
+  .daily-cover h2{font-size:23px}
+  .daily-issue{width:72px}
+  .daily-row{gap:8px;padding:10px}
+  .daily-score{font-size:10px}
+}

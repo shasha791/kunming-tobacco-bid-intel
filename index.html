@@ -23,7 +23,10 @@
           <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6v-9h-6v9Zm0-16v5h6V4h-6Z"/></svg></span>商机精选
         </button>
         <button class="nav-item" type="button" data-page="activity">
-          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>全部公告
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></span>全部招标
+        </button>
+        <button class="nav-item" type="button" data-page="daily">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M6 3h12a2 2 0 0 1 2 2v16l-4-2-4 2-4-2-4 2V5a2 2 0 0 1 2-2Zm2 6h8M8 11h8M8 15h5"/></svg></span>招标日报
         </button>
         <button class="nav-item" type="button" data-page="workspace">
           <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M5 3v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3M3 3h18M9 8h6M9 12h6"/></svg></span>我的工作台
@@ -74,6 +77,9 @@
           <button class="category-tab" type="button" data-global-category="D">D 本公司采购</button>
           <button class="category-tab" type="button" data-global-category="E">E 无关排除</button>
         </div>
+        <label class="unread-toggle" title="仅显示尚未打开详情的公告，已读状态保存在当前浏览器">
+          <input type="checkbox" id="onlyUnread">只看未读
+        </label>
       </div>
     </div>
 
@@ -83,6 +89,7 @@
       <div class="page-inner">
         <!-- 首页 -->
         <section class="page active" id="page-home">
+          <div class="focus-card" id="homeFocus"></div>
           <div class="stat-summary" id="homeStats"></div>
           <details class="data-disclosure">
             <summary>数据说明（统计口径 · 规则版本 · 去重方法）</summary>
@@ -120,6 +127,11 @@
           </details>
           <div class="result-meta" id="activityMeta"></div>
           <div class="feed" id="activityList"></div>
+        </section>
+
+        <!-- 招标日报（参考 AIHOT 日报结构） -->
+        <section class="page" id="page-daily">
+          <div class="daily-report" id="dailyReport"></div>
         </section>
 
         <!-- 项目详情（从具体项目进入） -->
