@@ -321,6 +321,14 @@ details summary{cursor:pointer;color:var(--brand)}
 .daily-archive{border-top:1px solid var(--line);padding-top:14px}
 .daily-archive summary{cursor:pointer;color:var(--brand);font-size:13px;font-weight:600}
 
+.chip.good{background:var(--ok-bg);color:var(--ok)}
+.chip.warn{background:#FFF0D2;color:#9A6300}
+.chip.bad{background:#F8E3E0;color:#A63A2E}
+.table-wrap{overflow-x:auto}
+.verify-sample{font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px}
+.verify-list{margin:0;padding-left:20px;color:var(--ink2);font-size:13px}
+.verify-list li{margin-bottom:6px}
+
 @media(max-width:760px){
   .unread-toggle{margin:0 0 12px 0}
   .daily-report{padding:16px;border:0}

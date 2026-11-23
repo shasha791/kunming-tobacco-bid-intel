@@ -43,6 +43,9 @@
         <button class="nav-item" type="button" data-page="sources">
           <span class="nav-ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"/></svg></span>采集来源
         </button>
+        <button class="nav-item" type="button" data-page="verification">
+          <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>采集验证
+        </button>
         <button class="nav-item" type="button" data-page="workflow">
           <span class="nav-ico"><svg viewBox="0 0 24 24"><path d="M4 7h6M4 12h6M4 17h6M14 5h6v14h-6zM10 7l4 0M10 12l4 0M10 17l4 0"/></svg></span>全流程工作台
         </button>
@@ -173,6 +176,11 @@
           <div class="panel"><div class="panel-head"><h2>关键词与匹配配置</h2><span class="panel-note">集中配置，可解释</span></div><div class="panel-body" id="configSummary"></div></div>
         </section>
 
+        <!-- 人工路径采集验证 -->
+        <section class="page" id="page-verification">
+          <div class="daily-report" id="verificationReport"></div>
+        </section>
+
         <!-- 全流程工作台：内嵌 Demo，查看公告→审批→标书在同一网页内完成 -->
         <section class="page" id="page-workflow">
           <div class="panel">
@@ -193,6 +201,7 @@
 <script src="data/app-data.js"></script>
 <script src="data/run-status.js"></script>
 <script src="data/deploy-status.js"></script>
+<script src="data/manual-verification.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
