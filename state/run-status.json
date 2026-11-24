@@ -5,20 +5,20 @@
   "deployed": true,
   "executionEnv": "github-actions",
   "noExternalSend": true,
-  "runId": "45127003218",
-  "trigger": "手动",
-  "triggeredSchedule": "",
+  "runId": "45326144540",
+  "trigger": "定时",
+  "triggeredSchedule": "35 19 * * *",
   "plannedBeijing": {
     "primary": "03:35",
     "fallback": "06:35"
   },
-  "startedAt": "2026-11-23T06:51:51.321Z",
-  "finishedAt": "2026-11-23T06:56:39.341Z",
-  "startedBeijing": "2026年11月23日 14:51",
-  "finishedBeijing": "2026年11月23日 14:56",
+  "startedAt": "2026-11-24T04:24:18.698Z",
+  "finishedAt": "2026-11-24T04:29:10.023Z",
+  "startedBeijing": "2026年11月24日 12:24",
+  "finishedBeijing": "2026年11月24日 12:29",
   "nextScheduled": {
-    "iso": "2026-11-23T19:35:00.000Z",
-    "beijing": "2026年11月24日 03:35",
+    "iso": "2026-11-24T19:35:00.000Z",
+    "beijing": "2026年11月25日 03:35",
     "label": "主任务 03:35（次日）"
   },
   "sources": [
@@ -71,8 +71,8 @@
   "buildResult": "success",
   "deployResult": "pending-deploy",
   "verifyResult": "not-verified",
-  "dataSavedAt": "2026-11-23T06:56:39.341Z",
-  "lastSuccessCollectedAt": "2026-11-23T06:56:39.341Z",
+  "dataSavedAt": "2026-11-24T04:29:10.023Z",
+  "lastSuccessCollectedAt": "2026-11-24T04:29:10.023Z",
   "lastDeployedAt": null,
   "lastDeployedRunId": null,
   "lastPublishedDataAt": null,
@@ -92,6 +92,6 @@
   "message": "",
   "build": {
     "result": "success",
-    "files": 10
+    "files": 11
   }
 }
