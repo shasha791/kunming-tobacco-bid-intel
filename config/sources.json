@@ -245,6 +245,25 @@
       "note": "电脑版有 WAF 不破解；改用官方公开的移动端列表与详情，逐页扫描+标题关键词/烟草语境过滤，低频限速。详情正文有部分脱敏，标题/地区/日期/行业为真实字段；无关键词检索接口，覆盖有限，零结果时标注覆盖范围而非平台无公告。"
     },
     {
+      "sourceId": "cgjy-curated",
+      "sourceName": "中烟电子采购平台（核验补录）",
+      "sourceType": "official",
+      "industry": "烟草",
+      "region": "全国",
+      "urls": { "home": "https://cgjy.tobacco.com.cn/" },
+      "listCapability": true,
+      "detailCapability": true,
+      "pagination": "固定核验清单",
+      "attachmentAccess": "以原公告指引为准",
+      "businessPriority": 1,
+      "technicalPriority": 1,
+      "adapter": "curated-source",
+      "enabled": true,
+      "collectionStatus": "已接入·公开公告核验补录",
+      "lastVerifiedAt": "2026-11-26",
+      "note": "读取已核验的公开公告清单，与其他来源一并去重入库。"
+    },
+    {
       "sourceId": "365trade",
       "sourceName": "中招联合招标采购平台",
       "sourceType": "official",

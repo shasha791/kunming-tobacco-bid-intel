@@ -1,4 +1,5 @@
 data/*.json
+!data/curated-notices.json
 data/*.js
 data/*.sqlite
 data/*.bak-*

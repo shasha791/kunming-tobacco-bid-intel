@@ -3,12 +3,14 @@ const { createCgjySource } = require("./cgjy-source");
 const { createYnGgzySource } = require("./yn-ggzy-source");
 const { createChengezhaoSource } = require("./chengezhao-source");
 const { createChinabiddingSource } = require("./chinabidding-source");
+const { createCuratedSource } = require("./curated-source");
 
 const factories = {
   "cgjy-source": createCgjySource,
   "yn-ggzy-source": createYnGgzySource,
   "chengezhao-source": createChengezhaoSource,
-  "chinabidding-source": createChinabiddingSource
+  "chinabidding-source": createChinabiddingSource,
+  "curated-source": createCuratedSource
 };
 
 async function collectOne(source, options = {}) {
