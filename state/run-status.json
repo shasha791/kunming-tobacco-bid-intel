@@ -5,17 +5,17 @@
   "deployed": true,
   "executionEnv": "github-actions",
   "noExternalSend": true,
-  "runId": "45754164525",
-  "trigger": "定时",
-  "triggeredSchedule": "35 22 * * *",
+  "runId": "45833573648",
+  "trigger": "手动",
+  "triggeredSchedule": "",
   "plannedBeijing": {
     "primary": "03:35",
     "fallback": "06:35"
   },
-  "startedAt": "2026-11-26T04:16:35.888Z",
-  "finishedAt": "2026-11-26T04:21:29.444Z",
-  "startedBeijing": "2026年11月26日 12:16",
-  "finishedBeijing": "2026年11月26日 12:21",
+  "startedAt": "2026-11-26T13:53:52.245Z",
+  "finishedAt": "2026-11-26T13:58:30.776Z",
+  "startedBeijing": "2026年11月26日 21:53",
+  "finishedBeijing": "2026年11月26日 21:58",
   "nextScheduled": {
     "iso": "2026-11-26T19:35:00.000Z",
     "beijing": "2026年11月27日 03:35",
@@ -49,30 +49,37 @@
       "status": "成功但零结果",
       "count": 0,
       "error": "移动端列表当前扫描范围内未命中关键词；该站无关键词检索接口，逐页扫描覆盖有限，非'平台无公告'。"
+    },
+    {
+      "sourceId": "cgjy-curated",
+      "sourceName": "中烟电子采购平台（核验补录）",
+      "status": "成功且有结果",
+      "count": 2,
+      "error": ""
     }
   ],
   "sourceSummary": {
-    "success": 0,
+    "success": 1,
     "empty": 4,
     "failed": 0
   },
   "counts": {
-    "fetched": 0,
-    "excluded": 11,
+    "fetched": 2,
+    "excluded": 12,
     "duplicate": 0,
-    "inserted": 0,
+    "inserted": 2,
     "updated": 0,
     "mergedSources": 0,
-    "notices": 34,
-    "projects": 34
+    "notices": 36,
+    "projects": 36
   },
   "collectResult": "success",
   "saveResult": "success",
   "buildResult": "success",
   "deployResult": "pending-deploy",
   "verifyResult": "not-verified",
-  "dataSavedAt": "2026-11-26T04:21:29.444Z",
-  "lastSuccessCollectedAt": "2026-11-26T04:21:29.444Z",
+  "dataSavedAt": "2026-11-26T13:58:30.776Z",
+  "lastSuccessCollectedAt": "2026-11-26T13:58:30.776Z",
   "lastDeployedAt": null,
   "lastDeployedRunId": null,
   "lastPublishedDataAt": null,
@@ -85,7 +92,7 @@
     "after": {
       "exists": true,
       "integrity": "ok",
-      "notices": 34
+      "notices": 36
     }
   },
   "initializedFirstRun": false,
