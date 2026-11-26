@@ -258,7 +258,7 @@
     let list = ALL.filter((n) => {
       const f = n.structured || {};
       if (kw) {
-        const hay = `${n.title} ${f.purchaser || n.purchaser} ${f.content || ""} ${n.fullText || ""}`.toLowerCase();
+        const hay = `${n.title} ${f.projectNo || ""} ${f.purchaser || n.purchaser} ${f.content || ""} ${n.fullText || ""}`.toLowerCase();
         if (!hay.includes(kw.toLowerCase())) return false;
       }
       if (cat && n.category !== cat) return false;
