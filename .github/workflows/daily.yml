@@ -3,6 +3,9 @@ name: Daily Tobacco Bid Intelligence
 # 云端每日采集与网站更新。北京时间 03:35 主任务 / 06:35 兜底（GitHub cron 为 UTC）。
 # 目标：北京时间 08:00 前完成网页更新；不发送邮件/企微/飞书。
 on:
+  push:
+    branches: [main]
+    paths: [data/curated-notices.json]
   workflow_dispatch:
     inputs:
       mode:
