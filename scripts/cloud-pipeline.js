@@ -9,7 +9,7 @@ const fsSync = require("node:fs");
 const path = require("node:path");
 const { DatabaseSync } = require("node:sqlite");
 const { collectEnabled } = require("./sources/registry");
-const { processNotice } = require("../lib/rules");
+const { classify, processNotice } = require("../lib/rules");
 const { scoreNotice } = require("../lib/scoring");
 const { assignAll } = require("../lib/assign");
 const { buildPreview } = require("../lib/notify");
@@ -106,7 +106,11 @@ async function main() {
       for (const n of assigned.notices) n.ownerId = n.assignment?.primary?.personId || "";
       const store = new Store(DB);
       upsert = store.upsertMany(assigned.notices);
-      const stored = store.listNotices();
+      const stored = store.listNotices().map((notice) => {
+        if (!notice.manuallyVerified) return notice;
+        const { validity, validityReason, isActionable } = classify(notice);
+        return { ...notice, validity, validityReason, isActionable };
+      });
       const preview = buildPreview(stored, store);
       const enriched = stored.map((n) => ({ ...n, timeline: store.getTimeline(n.projectKey || n.id) }));
       store.close();
@@ -197,9 +201,13 @@ async function main() {
 
   const finishedAt = new Date();
   const src = collection ? countSources(collection.statuses) : { success: 0, empty: 0, failed: 0 };
-  const lastSuccess = result.status === "success" || result.status === "partial"
+  const readLiveSource = collection?.statuses.some((s) => s.sourceId !== "cgjy-curated" && s.status !== "失败");
+  const previousCollection = prev?.lastSuccessCollectedAt === undefined
+    ? (dbBefore.exists && dbBefore.integrity === "ok" ? prev?.finishedAt || null : null)
+    : prev.lastSuccessCollectedAt;
+  const lastSuccess = readLiveSource && (result.status === "success" || result.status === "partial")
     ? finishedAt.toISOString()
-    : (prev?.lastSuccessCollectedAt || (dbBefore.exists && dbBefore.integrity === "ok" ? prev?.finishedAt : null));
+    : previousCollection;
   const summary = {
     schemaVersion: "1.0.0",
     status: result.status,
