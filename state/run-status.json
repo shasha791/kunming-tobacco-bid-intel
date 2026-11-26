@@ -5,17 +5,17 @@
   "deployed": true,
   "executionEnv": "github-actions",
   "noExternalSend": true,
-  "runId": "45838278304",
+  "runId": "45851564718",
   "trigger": "手动",
   "triggeredSchedule": "",
   "plannedBeijing": {
     "primary": "03:35",
     "fallback": "06:35"
   },
-  "startedAt": "2026-11-26T14:22:15.513Z",
-  "finishedAt": "2026-11-26T14:25:54.277Z",
-  "startedBeijing": "2026年11月26日 22:22",
-  "finishedBeijing": "2026年11月26日 22:25",
+  "startedAt": "2026-11-26T15:41:29.073Z",
+  "finishedAt": "2026-11-26T15:45:16.529Z",
+  "startedBeijing": "2026年11月26日 23:41",
+  "finishedBeijing": "2026年11月26日 23:45",
   "nextScheduled": {
     "iso": "2026-11-26T19:35:00.000Z",
     "beijing": "2026年11月27日 03:35",
@@ -52,9 +52,9 @@
     },
     {
       "sourceId": "cgjy-curated",
-      "sourceName": "中烟电子采购平台（核验补录）",
+      "sourceName": "中烟电子采购平台（人工核验补录）",
       "status": "成功且有结果",
-      "count": 4,
+      "count": 10,
       "error": ""
     }
   ],
@@ -64,12 +64,12 @@
     "failed": 0
   },
   "counts": {
-    "fetched": 4,
+    "fetched": 10,
     "excluded": 12,
-    "duplicate": 2,
-    "inserted": 2,
+    "duplicate": 10,
+    "inserted": 0,
     "updated": 0,
-    "mergedSources": 2,
+    "mergedSources": 5,
     "notices": 38,
     "projects": 38
   },
@@ -78,8 +78,8 @@
   "buildResult": "success",
   "deployResult": "pending-deploy",
   "verifyResult": "not-verified",
-  "dataSavedAt": "2026-11-26T14:25:54.277Z",
-  "lastSuccessCollectedAt": "2026-11-26T14:25:54.277Z",
+  "dataSavedAt": "2026-11-26T15:45:16.529Z",
+  "lastSuccessCollectedAt": "2026-11-26T15:45:16.529Z",
   "lastDeployedAt": null,
   "lastDeployedRunId": null,
   "lastPublishedDataAt": null,
@@ -87,7 +87,7 @@
     "before": {
       "exists": true,
       "integrity": "ok",
-      "notices": 36
+      "notices": 38
     },
     "after": {
       "exists": true,
