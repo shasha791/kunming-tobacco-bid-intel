@@ -31,6 +31,20 @@
   ],
   "subscriptions": [
     {
+      "id": "sub-pilot-wecom-self",
+      "label": "演示片区试点推送（仅授权人本人）",
+      "frequency": "手动验收",
+      "channel": "wecom",
+      "minScore": 0,
+      "acceptUnverifiedLeads": true,
+      "acceptKeyChanges": true,
+      "people": ["PILOT-OWNER-DEMO"],
+      "status": "试点启用（真实收件人待客户确认）",
+      "salesZone": "演示片区",
+      "recipient": "self",
+      "note": "第一轮只推送销售片区=演示片区的公告给授权人本人；真实收件人由客户确认后另行启用。"
+    },
+    {
       "id": "sub-daily",
       "label": "定时商机摘要（未生效）",
       "frequency": "每工作日 09:00",

@@ -49,7 +49,12 @@ async function collectOne(source, options = {}) {
 }
 
 async function collectEnabled(options = {}) {
-  const sourceConfigs = require("../../config/sources.json").sources.filter((s) => s.enabled && s.adapter);
+  // 可选来源白名单：命令行只跑单来源时设置 COLLECT_SOURCE_IDS=cgjy。
+  // 不传时保持原行为（全部启用来源），不影响既有工作流。
+  const onlyIds = String(options.sourceIds || process.env.COLLECT_SOURCE_IDS || "")
+    .split(",").map((s) => s.trim()).filter(Boolean);
+  const sourceConfigs = require("../../config/sources.json").sources.filter((s) =>
+    s.enabled && s.adapter && (!onlyIds.length || onlyIds.includes(s.sourceId)));
   const notices = [];
   const statuses = [];
   for (const config of sourceConfigs) {

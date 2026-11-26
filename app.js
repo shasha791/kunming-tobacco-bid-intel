@@ -250,6 +250,7 @@
   function renderActivity() {
     const kw = document.getElementById("filterKeyword").value.trim();
     const cat = document.getElementById("filterCategory").value;
+    const zone = document.getElementById("filterZone").value;
     const region = document.getElementById("filterRegion").value;
     const stage = document.getElementById("filterStage").value;
     const validity = document.getElementById("filterValidity") ? document.getElementById("filterValidity").value : "";
@@ -262,6 +263,7 @@
         if (!hay.includes(kw.toLowerCase())) return false;
       }
       if (cat && n.category !== cat) return false;
+      if (zone && (n.salesZone || "未分区") !== zone) return false;
       if (region && !(f.province || "").includes(region)) return false;
       if (stage && n.stage !== stage) return false;
       if (validity && n.validity !== validity) return false;
@@ -288,6 +290,9 @@
   }
 
   function fillFilterOptions() {
+    const zones = [...new Set(ALL.map((n) => n.salesZone || "未分区"))].sort();
+    const zoneSel = document.getElementById("filterZone");
+    zones.forEach((z) => { const o = document.createElement("option"); o.value = z; o.textContent = z; zoneSel.appendChild(o); });
     const regions = [...new Set(ALL.map((n) => n.structured?.province || "待核实").filter((p) => p && p !== "待核实"))].sort();
     const regionSel = document.getElementById("filterRegion");
     regions.forEach((r) => { const o = document.createElement("option"); o.value = r; o.textContent = r; regionSel.appendChild(o); });
@@ -331,6 +336,7 @@
           ${withStatus("purchaser", "采购单位/招标人")}
           ${withStatus("agency", "代理机构")}
           <dt>项目实施地区</dt><dd><b>${esc(f.province || "待核实")} ${esc(f.city || "")}</b> <span class="field-status">${esc((meta.province || {}).status || "")}</span><div class="field-evidence">原文证据：${esc((meta.province || {}).evidence || "")}（采购单位、代理机构所在地分列，不影响项目地区）</div></dd>
+          <dt>销售片区（归属）</dt><dd><b>${esc(n.salesZone || "未分区")}</b> <span class="field-status">${esc(n.assignment?.status || "待分派")}</span><div class="field-evidence">销售片区由分派规则或人工覆盖决定，与公告项目所在地区分列；负责人：${esc(n.assignment?.primary?.name || "待分派")}${n.assignment?.primary?.demo ? "（演示）" : ""}</div></dd>
           <dt>投标截止（北京时间）</dt><dd><b>${esc(formatWithYear(f.bidDeadline?.normalized))}</b> <span class="field-status">${esc((meta.bidDeadline || {}).status || "")}</span></dd>
           <dt>开标时间（北京时间）</dt><dd>${esc(formatWithYear(f.bidOpeningTime?.normalized))}</dd>
           <dt>报名截止</dt><dd>${esc(formatDate(f.signupDeadline?.normalized))}</dd>
@@ -367,11 +373,11 @@
       body = tl.length ? `<div class="timeline">${tl.map((t) => `<div class="tl-item"><span class="tl-date">${esc(t.publishDate ? formatDate(t.publishDate) : "日期待核实")}</span> · ${esc(t.noticeType || "")} · ${esc(t.title || "")}${t.changeDetail ? `<div class="skip-note">${esc(t.changeDetail)}</div>` : ""}</div>`).join("")}</div><div class="skip-note">同一项目的采购意向/招标/变更/中标公告按项目编号关联；变更与延期保留修改前后记录。</div>` : '<div class="empty-panel">该项目暂无关联公告</div>';
     } else if (state.detailTab === "follow") {
       body = `<div class="panel-body" style="padding:0">
-        <div style="font-size:13px;margin-bottom:10px"><b>负责人：</b>${esc(n.assignment?.primary?.name || "待分派")} ${n.assignment?.status === "人工调整" ? "（人工调整）" : ""}　<b>协同：</b>${esc((n.assignment?.collaborators || []).map((p) => p.name).join("、") || "无")}</div>
-        <div style="font-size:12.5px;color:var(--ink2)">${esc(n.assignment?.reason || "")}</div>
+        <div style="font-size:13px;margin-bottom:10px"><b>销售片区：</b>${esc(n.salesZone || "未分区")}　<b>负责人：</b>${esc(n.assignment?.primary?.name || "待分派")} ${n.assignment?.status === "人工调整" ? "（人工调整）" : ""}　<b>协同：</b>${esc((n.assignment?.collaborators || []).map((p) => p.name).join("、") || "无")}</div>
+        <div style="font-size:12.5px;color:var(--ink2)">项目所在地区（原文）：${esc(f.province || "待核实")} ${esc(f.city || "")}；分派依据：${esc(n.assignment?.reason || "")}</div>
         <div style="margin-top:14px;font-size:13px"><b>跟进状态：</b>${esc(n.followStatus || "未跟进")}</div>
         <div style="margin-top:10px"><button class="mini-btn" type="button" id="btnFollow">更新跟进状态</button> <button class="mini-btn" type="button" id="btnAssign">人工调整负责人</button></div>
-        <div class="data-banner" style="margin-top:14px">真实人员尚未配置，当前无负责人、无推送接收人；渠道未配置，不生成推送任务、不向任何人发送消息。</div>
+        <div class="data-banner" style="margin-top:14px">演示片区试点：公开负责人显示为"试点负责人（演示）"，真实人员名单与收件人须客户确认后启用；第一轮企微仅发授权人本人做验收。</div>
       </div>`;
     }
     const original = n.originalOfficialUrl || n.detailUrl || "";
@@ -541,7 +547,7 @@
 
   function exportCsv() {
     const list = window._activityFiltered || ALL;
-    const cols = [["公告标题", (n) => n.title], ["分类", (n) => n.category + " " + (n.categoryLabel || "")], ["阶段", (n) => n.stage + "/" + (n.noticeType || "")], ["采购单位", (n) => n.structured?.purchaser || n.purchaser || ""], ["地区", (n) => (n.structured?.province || "") + "/" + (n.structured?.city || "")], ["预算", (n) => n.structured?.budget?.raw || ""], ["投标截止", (n) => n.structured?.bidDeadline?.normalized || ""], ["已确认得分", (n) => n.score?.confirmedScore], ["未知维度数", (n) => n.score?.unknownCount], ["负责人", (n) => n.assignment?.primary?.name || "待分派"], ["公告状态", (n) => n.validity || ""], ["来源网站", (n) => n.sourceName || ""], ["发布日期(北京)", (n) => formatDate(n.publishDate)], ["最近采集(北京)", (n) => formatDate(n.lastSeenAt || n.discoveredAt)], ["原文链接", (n) => n.originalOfficialUrl || n.detailUrl || ""]];
+    const cols = [["公告标题", (n) => n.title], ["分类", (n) => n.category + " " + (n.categoryLabel || "")], ["阶段", (n) => n.stage + "/" + (n.noticeType || "")], ["采购单位", (n) => n.structured?.purchaser || n.purchaser || ""], ["地区", (n) => (n.structured?.province || "") + "/" + (n.structured?.city || "")], ["预算", (n) => n.structured?.budget?.raw || ""], ["投标截止", (n) => n.structured?.bidDeadline?.normalized || ""], ["已确认得分", (n) => n.score?.confirmedScore], ["未知维度数", (n) => n.score?.unknownCount], ["销售片区", (n) => n.salesZone || "未分区"], ["负责人", (n) => n.assignment?.primary?.name || "待分派"], ["公告状态", (n) => n.validity || ""], ["来源网站", (n) => n.sourceName || ""], ["发布日期(北京)", (n) => formatDate(n.publishDate)], ["最近采集(北京)", (n) => formatDate(n.lastSeenAt || n.discoveredAt)], ["原文链接", (n) => n.originalOfficialUrl || n.detailUrl || ""]];
     const escCsv = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
     const csv = "\ufeff" + cols.map((c) => escCsv(c[0])).join(",") + "\n" + list.map((n) => cols.map((c) => escCsv(c[1](n))).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -610,11 +616,11 @@
     const c = item.classification || {};
     const src = item.source || {};
     const rows = (item.keywordResults || []).map((r) => {
-      const cls = r.recordCount === 0 ? "bad" : r.quality && r.quality.indexOf("过宽") >= 0 ? "warn" : "good";
+      const cls = r.recordCount == null ? "" : r.recordCount === 0 ? "bad" : r.quality && r.quality.indexOf("过宽") >= 0 ? "warn" : "good";
       const samples = (r.sampleTitles || []).slice(0, 2).map((t) => `<div class="verify-sample">· ${esc(t)}</div>`).join("");
       return `<tr>
         <td><b>${esc(r.keyword)}</b></td>
-        <td><b>${r.recordCount}</b></td>
+        <td><b>${r.recordCount == null ? "—" : r.recordCount}</b></td>
         <td>${r.pageCount == null ? "—" : r.pageCount}</td>
         <td><span class="chip ${cls}">${esc(r.quality || r.status)}</span></td>
         <td>${samples || '<span class="muted">无样本</span>'}</td>
@@ -631,9 +637,9 @@
           <div class="daily-issue"><span>关键词</span><b>${s.keywordCount || (item.keywordResults || []).length}</b><small>个</small></div>
         </div>
         <div class="daily-stats">
-          <span><b>${s.keywordHitCount || 0}</b> 个有命中</span>
-          <span><b>${s.keywordZeroCount || 0}</b> 个零命中</span>
-          <span><b>${s.sumOfKeywordRecords || 0}</b> 条关键词命中累加</span>
+          <span><b>${s.keywordHitCount == null ? "—" : s.keywordHitCount}</b> 个有命中</span>
+          <span><b>${s.keywordZeroCount == null ? "—" : s.keywordZeroCount}</b> 个零命中</span>
+          <span><b>${s.sumOfKeywordRecords == null ? "—" : s.sumOfKeywordRecords}</b> 条关键词命中累加</span>
           <span>去重公告数：<b>${s.uniqueNoticeCount == null ? "未抓取全部正文" : s.uniqueNoticeCount}</b></span>
           ${src.indexRecordCount ? `<span>公开索引：<b>${src.indexRecordCount}</b> 条</span>` : ""}
         </div>
@@ -730,7 +736,7 @@
       document.querySelectorAll(".category-tab").forEach((x) => x.classList.toggle("active", x === b));
       if (state.page === "home") renderHome(); else showPage("activity");
     });
-    ["filterKeyword", "filterCategory", "filterRegion", "filterStage", "filterValidity", "filterOwner", "filterSort"].forEach((id) => {
+    ["filterKeyword", "filterCategory", "filterZone", "filterRegion", "filterStage", "filterValidity", "filterOwner", "filterSort"].forEach((id) => {
       const el = document.getElementById(id);
       el.addEventListener("input", renderActivity); el.addEventListener("change", renderActivity);
     });
@@ -742,7 +748,7 @@
       else if (state.page === "workspace") renderWorkspace();
     });
     document.getElementById("resetFilters").onclick = () => {
-      ["filterKeyword", "filterCategory", "filterRegion", "filterStage", "filterValidity", "filterOwner"].forEach((id) => document.getElementById(id).value = "");
+      ["filterKeyword", "filterCategory", "filterZone", "filterRegion", "filterStage", "filterValidity", "filterOwner"].forEach((id) => document.getElementById(id).value = "");
       document.getElementById("filterSort").value = "publish"; renderActivity();
     };
     document.getElementById("exportCsv").onclick = exportCsv;
