@@ -19,7 +19,8 @@ function createCuratedSource() {
         sourcePriority: 95,
         sourceUrl: "https://cgjy.tobacco.com.cn/",
         originalOfficialUrl: notice.detailUrl,
-        manuallyVerified: true
+        manuallyVerified: notice.verification !== "workbuddy-public",
+        workbuddyVerified: notice.verification === "workbuddy-public"
       }));
       return { items, stats: { coverageNote: "公开公告核验清单为空" } };
     }
