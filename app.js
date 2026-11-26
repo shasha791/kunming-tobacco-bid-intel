@@ -353,7 +353,7 @@
         <div class="reading-block"><h3>分类理由与待核实</h3><div class="reading-text">${esc(n.classificationReason || "")}</div>
         <div class="chip-row" style="margin-top:8px">${(n.pendingItems || []).length ? (n.pendingItems || []).map((x) => `<span class="chip">${esc(x)}</span>`).join(" ") : '<span class="chip">无需核实事项</span>'}</div></div>`;
     } else if (state.detailTab === "score") {
-      body = `<div class="data-banner">业务评分与信息可信度分别展示。评分表示适配优先级，<b>不代表中标概率</b>。规则版本 ${esc(s.ruleVersion || "")}（${esc(s.configStatus || "待业务确认")}）。</div>
+      body = `<div class="data-banner">业务评分与信息可信度分别展示。评分表示适配优先级，<b>不代表中标概率</b>。规则版本 ${esc(s.ruleVersion || "")}（${esc(s.configStatus || "待业务确认")}）。<a href="#scoring" style="margin-left:8px">查看完整评分规则 →</a></div>
         <div style="font-size:13px;margin-bottom:12px"><b>已确认得分：<span style="color:var(--accent);font-size:18px">${s.confirmedScore}</span></b> ／ 可能范围 ${esc(s.possibleMin)}–${esc(s.possibleMax)} ／ 未知维度 ${s.unknownCount} 个 ／ 优先级 <b>${esc(s.priority?.label || "")}</b></div>
         ${(s.dimensions || []).map((d) => `<div class="score-dim">
           <div class="score-dim-head"><b>${esc(d.label)}</b><span>${d.score == null ? "待确认" : d.score} / ${d.max} · ${esc(d.status)}</span></div>
@@ -679,6 +679,70 @@
       </div>${list.map(verificationSourceHtml).join("")}`;
   }
 
+  function renderScoringRules() {
+    const box = document.getElementById("scoringRulesContainer");
+    if (!box) return;
+    const R = DATA.scoringRules || {};
+    const dims = R.dimensions || [];
+    const maxTotal = dims.reduce((n, d) => n + (d.max || 0), 0);
+    const wordList = (arr) => (arr || []).map((w) => `<span class="chip">${esc(w)}</span>`).join("");
+
+    const dimHtml = dims.map((d, i) => `
+      <div class="score-dim">
+        <div class="score-dim-head"><b>${i + 1} · ${esc(d.label)}</b><span>满分 ${d.max}${d.status ? " · " + esc(d.status) : ""}</span></div>
+        <div class="bar"><i style="width:${Math.round((d.max || 0) / (maxTotal || 1) * 100)}%"></i></div>
+        <div style="font-size:12.5px;margin:8px 0 4px">打分条件：</div>
+        <ul style="font-size:12.5px;line-height:1.75;margin:0;padding-left:20px">
+          ${(d.rules || []).map((r) => `<li>${esc(r.condition)} <b>${r.score == null ? "未知·计0（范围 " + esc((r.range || []).join("–")) + "）" : r.score + " 分"}</b>${r.flag ? `<span class="flag">${esc(r.flag)}</span>` : ""}</li>`).join("")}
+        </ul>
+      </div>`).join("");
+
+    const priorityHtml = (R.priorityThresholds || []).map((p) => `<tr><td><b>${esc(p.level)}</b></td><td>${esc(p.label)}</td><td>${p.minScore == null ? esc(p.condition || "特殊规则") : "≥ " + p.minScore + " 分"}</td></tr>`).join("");
+
+    const clsHtml = Object.entries(R.classificationRules || {}).map(([k, v]) => `<tr><td><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join("");
+    const stageHtml = (R.noticeStages || []).map((s) => `<tr><td>${esc(s.type)}</td><td>${esc(s.stage)}</td><td>${esc((s.keywords || []).join("、"))}</td></tr>`).join("");
+
+    box.innerHTML = `
+      <div class="daily-report">
+        <div class="report-head">
+          <div><h2>AI 评分规则（工作台内置）</h2><p>本页规则直接读取配置 ${esc(R.ruleVersion || "")} / 匹配词表 ${esc(R.matchingRuleVersion || "")}，与打分程序同源。</p></div>
+          <div class="daily-issue"><span>总分</span><b>${maxTotal}</b><small>分</small></div>
+        </div>
+        <div class="data-banner"><strong>规则状态：${esc(R.status || "待业务确认")}</strong>　${esc(R.notice || "")} 评分表示适配优先级，<b>不代表中标概率</b>。</div>
+      </div>
+
+      <div class="panel"><div class="panel-head"><h2>一、六个维度与分值</h2><span class="panel-note">已确认得分 = 各维度得分之和；未知维度一律计 0，不自动放大为满分</span></div>
+        <div class="panel-body">${dimHtml}
+          <div class="reading-block" style="margin-top:16px"><h3>计算口径</h3><div class="reading-text">${esc((R.rules || {}).confirmedScore || "")}<br>${esc((R.rules || {}).possibleRange || "")}。<br>未知维度数 ≥ 2 且已确认得分 &lt; 65 → 标记「信息不足·待核实」，不进入确定性高分推荐。</div></div>
+        </div>
+      </div>
+
+      <div class="panel"><div class="panel-head"><h2>二、分数到优先级</h2><span class="panel-note">分类 D/E 无论分数直接排除；C 类固定历史追踪</span></div>
+        <div class="panel-body"><table class="table"><thead><tr><th>等级</th><th>含义</th><th>条件</th></tr></thead><tbody>${priorityHtml}</tbody></table></div>
+      </div>
+
+      <div class="panel"><div class="panel-head"><h2>三、公告分类规则（评分前准入）</h2></div>
+        <div class="panel-body"><table class="table"><thead><tr><th>分类</th><th>规则</th></tr></thead><tbody>${clsHtml}</tbody></table></div>
+      </div>
+
+      <div class="panel"><div class="panel-head"><h2>四、公告阶段识别</h2></div>
+        <div class="panel-body"><table class="table"><thead><tr><th>类型</th><th>阶段</th><th>关键词</th></tr></thead><tbody>${stageHtml}</tbody></table></div>
+      </div>
+
+      <div class="panel"><div class="panel-head"><h2>五、产品与行业词表</h2><span class="panel-note">强词命中即得 35 分；弱词须叠加行业+设备语境才计 12 分</span></div>
+        <div class="panel-body">
+          <h3>强产品词 · 整机</h3><div class="chip-row">${wordList(R.productTerms?.strong?.machine)}</div>
+          <h3 style="margin-top:12px">强产品词 · 型号</h3><div class="chip-row">${wordList(R.productTerms?.strong?.models)}</div>
+          <h3 style="margin-top:12px">强产品词 · 服务</h3><div class="chip-row">${wordList(R.productTerms?.strong?.services)}</div>
+          <h3 style="margin-top:12px">强产品词 · 零配件</h3><div class="chip-row">${wordList(R.productTerms?.strong?.parts)}</div>
+          <h3 style="margin-top:12px">宽泛词（须叠加语境）</h3><div class="chip-row">${wordList((R.productTerms?.weak?.genericMachine || []).concat(R.productTerms?.weak?.genericParts || [], R.productTerms?.weak?.genericService || []))}</div>
+          <h3 style="margin-top:12px">烟草行业语境</h3><div class="chip-row">${wordList((R.tobaccoContext?.buyer || []).concat(R.tobaccoContext?.usage || []))}</div>
+          <h3 style="margin-top:12px">设备语境</h3><div class="chip-row">${wordList(R.deviceContext?.terms)}</div>
+          <h3 style="margin-top:12px">排除词（命中即排除或降 E）</h3><div class="chip-row">${wordList(Object.values(R.exclusions || {}).flat().filter((x) => typeof x === "string"))}</div>
+        </div>
+      </div>`;
+  }
+
   function showPage(page) {
     state.page = page;
     document.querySelectorAll(".nav-item").forEach((b) => b.classList.toggle("active", b.dataset.page === page));
@@ -694,7 +758,8 @@
       push: ["订阅推送", "渠道未配置 · 无推送任务"],
       sources: ["采集来源", "来源覆盖、实测状态与采集结果"],
       verification: ["采集验证", "公开采集来源关键词人工路径复核与清洗结果"],
-      workflow: ["全流程工作台", "在同一网页内完成公告筛选、审批、标书草稿与 Word 导出"]
+      workflow: ["全流程工作台", "在同一网页内完成公告筛选、审批、标书草稿与 Word 导出"],
+      scoring: ["评分规则", "六维度分值、打分条件、优先级阈值与分类词表（与打分程序同源）"]
     };
     document.getElementById("pageTitle").textContent = (titles[page] || ["", ""])[0];
     document.getElementById("pageSubtitle").textContent = (titles[page] || ["", ""])[1];
@@ -707,6 +772,7 @@
     if (page === "push") renderPush();
     if (page === "sources") renderSources();
     if (page === "verification") renderVerification();
+    if (page === "scoring") renderScoringRules();
     if (page !== "home") document.getElementById("updateNote").textContent = updateNoteText();
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -755,7 +821,7 @@
     document.querySelectorAll("#workspaceTabs button").forEach((b) => b.onclick = () => { state.ws = b.dataset.ws; document.querySelectorAll("#workspaceTabs button").forEach((x) => x.classList.toggle("active", x === b)); renderWorkspace(); });
     window.addEventListener("hashchange", handleHash);
     function handleHash() {
-      const m = location.hash.match(/^#(home|activity|daily|detail|workspace|people|push|sources|verification|workflow)(?:\/(.+))?$/);
+      const m = location.hash.match(/^#(home|activity|daily|detail|workspace|people|push|sources|verification|workflow|scoring)(?:\/(.+))?$/);
       if (m) {
         if (m[1] === "detail" && m[2]) { state.selectedId = decodeURIComponent(m[2]); state.detail = ALL.find((x) => x.id === state.selectedId) || state.detail; }
         showPage(m[1]);

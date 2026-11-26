@@ -9,12 +9,13 @@ const fsSync = require("node:fs");
 const path = require("node:path");
 const { DatabaseSync } = require("node:sqlite");
 const { collectEnabled } = require("./sources/registry");
-const { classify, processNotice } = require("../lib/rules");
+const { processNotice } = require("../lib/rules");
 const { scoreNotice } = require("../lib/scoring");
 const { assignAll } = require("../lib/assign");
 const { buildPreview } = require("../lib/notify");
 const { Store } = require("../lib/store");
 const { buildPublicSite } = require("./build-public-site");
+const { buildScoringRulesView } = require("../lib/scoring-rules-view");
 const { bjText, nextSchedule, readPreviousSummary, validateSummary, emptyCounts } = require("./lib/run-state");
 const businessProfile = require("../config/business-profile.json");
 const assignmentConfig = require("../config/assignment.json");
@@ -62,7 +63,8 @@ function countSources(statuses) {
 
 async function main() {
   const startedAt = new Date();
-  const runId = process.env.GITHUB_RUN_ID || `local-${startedAt.getTime()}`;
+  // 闭环脚本可显式指定运行ID，使采集/构建/部署/核验共用同一个标识。
+  const runId = process.env.CLOSED_LOOP_RUN_ID || process.env.GITHUB_RUN_ID || `local-${startedAt.getTime()}`;
   const trigger = process.env.GITHUB_EVENT_NAME === "schedule" ? "定时" : "手动";
   const triggeredSchedule = process.env.TRIGGERED_SCHEDULE || "";
   const prev = readPreviousSummary(RUN_SUMMARY);
@@ -106,11 +108,7 @@ async function main() {
       for (const n of assigned.notices) n.ownerId = n.assignment?.primary?.personId || "";
       const store = new Store(DB);
       upsert = store.upsertMany(assigned.notices);
-      const stored = store.listNotices().map((notice) => {
-        if (!notice.manuallyVerified && !notice.workbuddyVerified) return notice;
-        const { validity, validityReason, isActionable } = classify(notice);
-        return { ...notice, validity, validityReason, isActionable };
-      });
+      const stored = store.listNotices();
       const preview = buildPreview(stored, store);
       const enriched = stored.map((n) => ({ ...n, timeline: store.getTimeline(n.projectKey || n.id) }));
       store.close();
@@ -124,6 +122,7 @@ async function main() {
         scoringRuleVersion: require("../config/scoring.json").ruleVersion,
         scoringStatus: require("../config/scoring.json").status,
         matchingRuleVersion: require("../config/keywords.json").ruleVersion,
+        scoringRules: buildScoringRulesView(),
         simulation: {
           enabled: Boolean(businessProfile.simulation?.enabled || assignmentConfig.simulation?.enabled),
           label: businessProfile.simulation?.label || "模拟配置",
@@ -201,13 +200,9 @@ async function main() {
 
   const finishedAt = new Date();
   const src = collection ? countSources(collection.statuses) : { success: 0, empty: 0, failed: 0 };
-  const readLiveSource = collection?.statuses.some((s) => s.sourceId !== "cgjy-curated" && s.status !== "失败");
-  const previousCollection = prev?.lastSuccessCollectedAt === undefined
-    ? (dbBefore.exists && dbBefore.integrity === "ok" ? prev?.finishedAt || null : null)
-    : prev.lastSuccessCollectedAt;
-  const lastSuccess = readLiveSource && (result.status === "success" || result.status === "partial")
+  const lastSuccess = result.status === "success" || result.status === "partial"
     ? finishedAt.toISOString()
-    : previousCollection;
+    : (prev?.lastSuccessCollectedAt || (dbBefore.exists && dbBefore.integrity === "ok" ? prev?.finishedAt : null));
   const summary = {
     schemaVersion: "1.0.0",
     status: result.status,

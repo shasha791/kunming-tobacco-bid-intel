@@ -9,6 +9,7 @@ const { Store } = require("../lib/store");
 const businessProfile = require("../config/business-profile.json");
 const assignmentConfig = require("../config/assignment.json");
 const demoPilot = require("../config/demo-pilot.json");
+const { buildScoringRulesView } = require("../lib/scoring-rules-view");
 
 const ROOT = path.join(__dirname, "..");
 const DB_PATH = process.env.NOTICE_DB_PATH || path.join(ROOT, "data", "notices.sqlite");
@@ -55,6 +56,7 @@ async function main(options = {}) {
     scoringRuleVersion: require("../config/scoring.json").ruleVersion,
     scoringStatus: require("../config/scoring.json").status,
     matchingRuleVersion: require("../config/keywords.json").ruleVersion,
+    scoringRules: buildScoringRulesView(),
     simulation: {
       enabled: Boolean(businessProfile.simulation?.enabled || assignmentConfig.simulation?.enabled),
       label: businessProfile.simulation?.label || "模拟配置",
