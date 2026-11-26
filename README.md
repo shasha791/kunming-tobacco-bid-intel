@@ -5,3 +5,4 @@
 Node.js >= 22.5；`npm run cloud` 采集并构建；`npm test` 自测。每日云端工作流见 `.github/workflows/daily.yml`。
 
 注意：配置中的服务区域、预算区间、资质证书、型号可得性与片区经理均为模拟数据，仅用于演示，不可用于真实投标决策。
+auto-publish verification 1795709223
