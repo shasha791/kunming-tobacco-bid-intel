@@ -107,7 +107,7 @@ async function main() {
       const store = new Store(DB);
       upsert = store.upsertMany(assigned.notices);
       const stored = store.listNotices().map((notice) => {
-        if (!notice.manuallyVerified) return notice;
+        if (!notice.manuallyVerified && !notice.workbuddyVerified) return notice;
         const { validity, validityReason, isActionable } = classify(notice);
         return { ...notice, validity, validityReason, isActionable };
       });
