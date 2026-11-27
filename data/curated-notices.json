@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-11-26T15:20:21.760Z",
+  "generatedAt": "2026-11-27T09:24:40.336Z",
   "note": "人工核验补录：仅收录中烟电子采购平台公开原文可打开的真实公告；不伪造字段。每次流水线运行与在线来源合并去重入库。",
   "notices": [
     {
@@ -168,6 +168,51 @@
         "reason": "自动采集批次合并（原文可核对）",
         "sourceBatch": "cgjy-2026-11-26T14-20-38-097Z.json",
         "verifiedAt": "2026-11-26T15:20:21.705Z",
+        "fieldsFromOriginal": true
+      }
+    },
+    {
+      "title": "北京达特集成技术有限责任公司制丝线升级改造物流设备购置及系统集成项目-输送系统-竞争谈判公告",
+      "detailUrl": "https://cgjy.tobacco.com.cn/jzhwzb/96617.jhtml",
+      "publishDate": "2026-11-27 11:38:56",
+      "noticeType": "货物招标",
+      "bodyText": "项目编号：B202603BA2002663840763\n采购人：北京达特集成技术有限责任公司\n获取时间：2026-11-30 17:00\n递交截止时间：2026-12-08 09:30\n开标时间：2026-12-08 09:30",
+      "summary": "公告关键词：制丝、改造、升级、中烟、制丝线、设备、系统",
+      "verification": "workbuddy-public",
+      "curation": {
+        "reason": "WorkBuddy 自动采集批次（原文可核对）",
+        "sourceBatch": "cgjy-2026-11-27T09-24-24-389Z.json",
+        "verifiedAt": "2026-11-27T09:24:40.335Z",
+        "fieldsFromOriginal": true
+      }
+    },
+    {
+      "title": "红云红河烟草（集团）有限责任公司昆明卷烟厂制丝车间物料分选回收小线升级改造项目-公开招标公告",
+      "detailUrl": "https://cgjy.tobacco.com.cn/zcgczb/96927.jhtml",
+      "publishDate": "2026-11-27 16:26:36",
+      "noticeType": "工程招标",
+      "bodyText": "项目编号：A202601BA2001716341211\n采购人：红云红河烟草(集团)有限责任公司\n获取时间：2026-12-04 17:00\n递交截止时间：2026-12-22 09:30\n开标时间：2026-12-22 09:30",
+      "summary": "公告关键词：制丝、改造、升级、中烟、卷烟厂、中国烟草、制丝车间、卷烟、设备、配套、系统",
+      "verification": "workbuddy-public",
+      "curation": {
+        "reason": "WorkBuddy 自动采集批次（原文可核对）",
+        "sourceBatch": "cgjy-2026-11-27T09-24-24-389Z.json",
+        "verifiedAt": "2026-11-27T09:24:40.336Z",
+        "fieldsFromOriginal": true
+      }
+    },
+    {
+      "title": "湖南中烟工业有限责任公司吴忠卷烟厂提升机及贮柜维修项目-公开招标公告",
+      "detailUrl": "https://cgjy.tobacco.com.cn/zcfwzb/95717.jhtml",
+      "publishDate": "2026-11-25 15:35:21",
+      "noticeType": "服务招标",
+      "bodyText": "项目编号：C202601BA2001716750099\n采购人：湖南中烟工业有限责任公司吴忠卷烟厂\n获取时间：2026-12-02 23:59\n递交截止时间：2026-12-16 09:30\n开标时间：2026-12-16 09:30",
+      "summary": "公告关键词：制丝、备件、维修、中烟、卷烟厂、烟草专卖、制丝车间、卷烟、系统",
+      "verification": "workbuddy-public",
+      "curation": {
+        "reason": "WorkBuddy 自动采集批次（原文可核对）",
+        "sourceBatch": "cgjy-2026-11-27T09-24-24-389Z.json",
+        "verifiedAt": "2026-11-27T09:24:40.336Z",
         "fieldsFromOriginal": true
       }
     }
