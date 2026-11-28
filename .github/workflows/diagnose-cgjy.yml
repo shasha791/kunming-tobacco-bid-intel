@@ -1,0 +1,73 @@
+name: CGJY Collection Diagnostic
+
+# 独立的采集诊断工作流：仅用公开搜索页/详情页，记录分阶段指标。
+# 触发方式：workflow_dispatch，或推送 reports/cgjy-diagnose/trigger.txt。
+# 诊断结果提交到 diagnose-results 分支，不影响 main/gh-pages/cloud-state。
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [reports/cgjy-diagnose/trigger.txt]
+
+concurrency:
+  group: cgjy-diagnose
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    env:
+      TZ: Asia/Shanghai
+    steps:
+      - name: 检出主分支
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: 打印时间窗口
+        shell: bash
+        run: |
+          echo "UTC: $(date -u '+%F %T')"
+          echo "Asia/Shanghai: $(TZ=Asia/Shanghai date '+%F %T')"
+
+      - name: 运行中烟采集分阶段诊断
+        shell: bash
+        env:
+          DIAG_ENV: github
+        run: node scripts/diagnose-cgjy-collection.js
+
+      - name: 上传诊断报告 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cgjy-diagnose
+          path: reports/cgjy-diagnose/github-*.json
+          if-no-files-found: error
+
+      - name: 提交诊断报告到 diagnose-results 分支
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPORT=$(ls -t reports/cgjy-diagnose/github-*.json | head -1)
+          cp "$REPORT" /tmp/diagnose-latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin diagnose-results >/dev/null 2>&1; then
+            git fetch --depth=1 origin diagnose-results
+            git checkout -B diagnose-results origin/diagnose-results
+          else
+            git checkout --orphan diagnose-results
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          mkdir -p reports
+          cp /tmp/diagnose-latest.json reports/latest.json
+          git add -f reports/latest.json
+          git commit -m "Update cgjy diagnose result $(date -u '+%F %T')" || echo "No changes."
+          git push origin diagnose-results

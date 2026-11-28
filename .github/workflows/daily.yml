@@ -3,16 +3,10 @@ name: Daily Tobacco Bid Intelligence
 # 云端每日采集与网站更新。北京时间 03:35 主任务 / 06:35 兜底（GitHub cron 为 UTC）。
 # 目标：北京时间 08:00 前完成网页更新；不发送邮件/企微/飞书。
 on:
+  push:
+    branches: [main]
+    paths: [data/curated-notices.json]
   workflow_dispatch:
-    inputs:
-      mode:
-        description: "运行模式"
-        type: choice
-        required: true
-        default: collect
-        options:
-          - collect
-          - diagnose
   schedule:
     - cron: "35 19 * * *"   # 北京时间 03:35（次日）
     - cron: "35 22 * * *"   # 北京时间 06:35（兜底）
@@ -52,25 +46,7 @@ jobs:
         with:
           node-version: "22"
 
-      - name: 中烟采集分阶段诊断（workflow_dispatch diagnose）
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          echo "UTC: $(date -u '+%F %T')"
-          echo "Asia/Shanghai: $(TZ=Asia/Shanghai date '+%F %T')"
-          DIAG_ENV=github node scripts/diagnose-cgjy-collection.js
-
-      - name: 上传诊断报告
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: cgjy-diagnose
-          path: reports/cgjy-diagnose/github-*.json
-          if-no-files-found: error
-
       - name: 恢复历史状态（cloud-state 分支）
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         id: restore
         shell: bash
         run: |
@@ -107,21 +83,18 @@ jobs:
           fi
 
       - name: 运行云端采集流水线
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         id: pipeline
         continue-on-error: true   # 失败也必须产出运行摘要，供后续 job 保存真实失败状态
         shell: bash
         run: node scripts/cloud-pipeline.js
 
       - name: 记录采集步骤退出码
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         shell: bash
         run: |
           echo "PIPELINE_OUTCOME=${{ steps.pipeline.outcome }}" >> "$GITHUB_ENV"
           echo "采集步骤结果: ${{ steps.pipeline.outcome }}（success/failure）"
 
       - name: 校验并收集运行产物
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         id: collect_artifacts
         shell: bash
         run: |
@@ -129,7 +102,6 @@ jobs:
           node scripts/prepare-artifacts.js
 
       - name: 上传状态交接
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         uses: actions/upload-artifact@v4
         with:
           name: cloud-state-update
@@ -143,20 +115,18 @@ jobs:
     timeout-minutes: 15
     needs: collect-and-build
     # 诊断模式不发布；采集 job 失败也要保存真实失败摘要；仅取消时不运行
-    if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') && always() && needs.collect-and-build.result != 'cancelled' }}
+    if: ${{ always() && needs.collect-and-build.result != 'cancelled' }}
     permissions:
       contents: write
     env:
       TZ: Asia/Shanghai
     steps:
       - name: 检出主分支
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: 下载 artifact（官方 action）
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
@@ -164,7 +134,6 @@ jobs:
           path: cloud-output
 
       - name: 校验交接内容
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.mode == 'diagnose') }}
         id: handoff
         shell: bash
         run: |
