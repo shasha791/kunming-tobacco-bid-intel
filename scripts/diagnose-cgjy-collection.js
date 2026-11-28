@@ -66,7 +66,9 @@ async function main() {
       const url = page === 1
         ? `${cfg.urls.search}?q=${encodeURIComponent(kw)}`
         : `${cfg.urls.searchPage.replace("{page}", page)}?q=${encodeURIComponent(kw)}`;
+      console.log(`[diag:${ENV}] 请求搜索页 kw=${kw} page=${page} url=${url}`);
       const res = await client.fetch(url, { tag: `diag:search:${kw}:p${page}` });
+      console.log(`[diag:${ENV}] 搜索页响应 kw=${kw} page=${page} status=${res.status} ok=${res.ok} bytes=${res.text ? res.text.length : 0} error=${res.error || ""}`);
       const parsed = res.ok ? parseSearchList(res.text, cfg.urls.home) : [];
       row.searches.push({ page, url, httpStatus: res.status, ok: Boolean(res.ok), parsed: parsed.length, error: res.error || "" });
       row.searchParsed += parsed.length;

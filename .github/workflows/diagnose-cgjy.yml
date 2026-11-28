@@ -64,20 +64,28 @@ jobs:
         if: ${{ always() }}
         shell: bash
         run: |
-          set -euo pipefail
-          REPORT=$(ls -t reports/cgjy-diagnose/github-*.json | head -1)
+          set -uo pipefail
+          REPORT=$(ls -t reports/cgjy-diagnose/github-*.json 2>/dev/null | head -1 || true)
+          if [ -z "$REPORT" ]; then
+            echo "::warning::未生成诊断报告，跳过提交"
+            exit 0
+          fi
           cp "$REPORT" /tmp/diagnose-latest.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --depth=1 origin 2>/dev/null || true
           if git ls-remote --exit-code --heads origin diagnose-results >/dev/null 2>&1; then
-            git fetch --depth=1 origin diagnose-results
             git checkout -B diagnose-results origin/diagnose-results
           else
             git checkout --orphan diagnose-results
-            git rm -rf . >/dev/null 2>&1 || true
+            git rm -rf --cached . >/dev/null 2>&1 || true
           fi
           mkdir -p reports
           cp /tmp/diagnose-latest.json reports/latest.json
           git add -f reports/latest.json
-          git commit -m "Update cgjy diagnose result $(date -u '+%F %T')" || echo "No changes."
-          git push origin diagnose-results
+          if git diff --cached --quiet; then
+            echo "诊断报告无变化"
+          else
+            git commit -m "Update cgjy diagnose result $(date -u '+%F %T')" || exit 1
+            git push origin diagnose-results || exit 1
+          fi
