@@ -1,0 +1,104 @@
+window.CLOUD_RUN_STATUS = {
+  "schemaVersion": "1.0.0",
+  "status": "success",
+  "mode": "cloud-collect-only",
+  "deployed": true,
+  "executionEnv": "github-actions",
+  "noExternalSend": true,
+  "runId": "46105953491",
+  "trigger": "定时",
+  "triggeredSchedule": "35 22 * * *",
+  "plannedBeijing": {
+    "primary": "03:35",
+    "fallback": "06:35"
+  },
+  "startedAt": "2026-11-28T04:06:17.575Z",
+  "finishedAt": "2026-11-28T04:11:12.672Z",
+  "startedBeijing": "2026年11月28日 12:06",
+  "finishedBeijing": "2026年11月28日 12:11",
+  "nextScheduled": {
+    "iso": "2026-11-28T19:35:00.000Z",
+    "beijing": "2026年11月29日 03:35",
+    "label": "主任务 03:35（次日）"
+  },
+  "sources": [
+    {
+      "sourceId": "cgjy",
+      "sourceName": "中烟电子采购平台",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": ""
+    },
+    {
+      "sourceId": "yn-ggzy",
+      "sourceName": "云南省公共资源交易信息网",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": ""
+    },
+    {
+      "sourceId": "chengezhao",
+      "sourceName": "诚E招电子采购交易平台",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": "栏目分页当前覆盖范围内未命中关键词；全量检索接口 /cms/search.json 返回模板不可解析，非'平台无公告'。"
+    },
+    {
+      "sourceId": "chinabidding",
+      "sourceName": "采购与招标网",
+      "status": "成功但零结果",
+      "count": 0,
+      "error": "移动端列表当前扫描范围内未命中关键词；该站无关键词检索接口，逐页扫描覆盖有限，非'平台无公告'。"
+    },
+    {
+      "sourceId": "cgjy-curated",
+      "sourceName": "中烟电子采购平台（人工核验补录）",
+      "status": "成功且有结果",
+      "count": 13,
+      "error": ""
+    }
+  ],
+  "sourceSummary": {
+    "success": 1,
+    "empty": 4,
+    "failed": 0
+  },
+  "counts": {
+    "fetched": 13,
+    "excluded": 12,
+    "duplicate": 13,
+    "inserted": 0,
+    "updated": 0,
+    "mergedSources": 0,
+    "notices": 41,
+    "projects": 41
+  },
+  "collectResult": "success",
+  "saveResult": "success",
+  "buildResult": "success",
+  "deployResult": "pending-deploy",
+  "verifyResult": "not-verified",
+  "dataSavedAt": "2026-11-28T04:11:12.672Z",
+  "lastSuccessCollectedAt": "2026-11-28T04:11:12.672Z",
+  "lastDeployedAt": null,
+  "lastDeployedRunId": null,
+  "lastPublishedDataAt": null,
+  "database": {
+    "before": {
+      "exists": true,
+      "integrity": "ok",
+      "notices": 41
+    },
+    "after": {
+      "exists": true,
+      "integrity": "ok",
+      "notices": 41
+    }
+  },
+  "initializedFirstRun": false,
+  "message": "",
+  "build": {
+    "result": "success",
+    "files": 11
+  }
+};
