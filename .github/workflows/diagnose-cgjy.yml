@@ -42,7 +42,16 @@ jobs:
         shell: bash
         env:
           DIAG_ENV: github
-        run: node scripts/diagnose-cgjy-collection.js
+        run: |
+          set +e
+          node scripts/diagnose-cgjy-collection.js 2>&1 | tee /tmp/diag-output.txt
+          rc=${PIPESTATUS[0]}
+          echo "DIAG_EXIT=$rc"
+          echo "$rc" > /tmp/diag-exit.txt
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::诊断脚本退出码 $rc"
+            exit "$rc"
+          fi
 
       - name: 上传诊断报告 artifact
         uses: actions/upload-artifact@v4
@@ -52,6 +61,7 @@ jobs:
           if-no-files-found: error
 
       - name: 提交诊断报告到 diagnose-results 分支
+        if: ${{ always() }}
         shell: bash
         run: |
           set -euo pipefail

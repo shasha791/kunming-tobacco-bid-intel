@@ -29,6 +29,28 @@ function words() {
   ].slice(0, cfg.maxKeywords || 8);
 }
 
+function writeFailureReport(env, startedAt, error, partial = {}) {
+  const dir = path.join(ROOT, "reports", "cgjy-diagnose");
+  fs.mkdirSync(dir, { recursive: true });
+  const out = path.join(dir, `${env}-${startedAt.toISOString().replace(/[:.]/g, "-")}.json`);
+  const report = {
+    schemaVersion: "1.0.0", env,
+    startedAt: startedAt.toISOString(),
+    finishedAt: new Date().toISOString(),
+    failed: true,
+    error: String(error && error.message || error),
+    stack: String(error && error.stack || "").slice(0, 2000),
+    metrics: Object.assign({
+      httpRequests: 0, http200: 0, httpNon200: 0,
+      searchParsed: 0, detailAttempted: 0, detailParsed: 0,
+      rawNotices: 0, filteredNotices: 0, dedupedNew: 0
+    }, partial.metrics || {})
+  };
+  fs.writeFileSync(out, JSON.stringify(report, null, 2) + "\n", "utf8");
+  console.error(`[diag:${env}] FAILED: ${report.error}`);
+  return out;
+}
+
 async function main() {
   const startedAt = new Date();
   const client = new HttpClient();
@@ -112,5 +134,5 @@ async function main() {
   return report;
 }
 
-if (require.main === module) main().catch((e) => { console.error(`[diag:${ENV}] FAILED: ${e.message}`); process.exitCode = 1; });
+if (require.main === module) main().catch((e) => { writeFailureReport(ENV, new Date(), e); process.exitCode = 1; });
 module.exports = { main, words };
