@@ -1,0 +1,35 @@
+[diag:github] 请求搜索页 kw=切丝 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%88%87%E4%B8%9D
+[diag:github] 搜索页响应 kw=切丝 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切丝 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%88%87%E4%B8%9D
+[diag:github] 搜索页响应 kw=切丝 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切梗 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%88%87%E6%A2%97
+[diag:github] 搜索页响应 kw=切梗 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切梗 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%88%87%E6%A2%97
+[diag:github] 搜索页响应 kw=切梗 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切梗丝机 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%88%87%E6%A2%97%E4%B8%9D%E6%9C%BA
+[diag:github] 搜索页响应 kw=切梗丝机 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切梗丝机 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%88%87%E6%A2%97%E4%B8%9D%E6%9C%BA
+[diag:github] 搜索页响应 kw=切梗丝机 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=全厂备品配件 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%85%A8%E5%8E%82%E5%A4%87%E5%93%81%E9%85%8D%E4%BB%B6
+[diag:github] 搜索页响应 kw=全厂备品配件 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=全厂备品配件 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%85%A8%E5%8E%82%E5%A4%87%E5%93%81%E9%85%8D%E4%BB%B6
+[diag:github] 搜索页响应 kw=全厂备品配件 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=梗丝机 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E6%A2%97%E4%B8%9D%E6%9C%BA
+[diag:github] 搜索页响应 kw=梗丝机 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=梗丝机 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E6%A2%97%E4%B8%9D%E6%9C%BA
+[diag:github] 搜索页响应 kw=梗丝机 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切叶 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%88%87%E5%8F%B6
+[diag:github] 搜索页响应 kw=切叶 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=切叶 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%88%87%E5%8F%B6
+[diag:github] 搜索页响应 kw=切叶 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=制丝 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%88%B6%E4%B8%9D
+[diag:github] 搜索页响应 kw=制丝 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=制丝 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%88%B6%E4%B8%9D
+[diag:github] 搜索页响应 kw=制丝 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=动力要配件 page=1 url=https://cgjy.tobacco.com.cn/search.jspx?q=%E5%8A%A8%E5%8A%9B%E8%A6%81%E9%85%8D%E4%BB%B6
+[diag:github] 搜索页响应 kw=动力要配件 page=1 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] 请求搜索页 kw=动力要配件 page=2 url=https://cgjy.tobacco.com.cn/search_2.jspx?q=%E5%8A%A8%E5%8A%9B%E8%A6%81%E9%85%8D%E4%BB%B6
+[diag:github] 搜索页响应 kw=动力要配件 page=2 status=0 ok=false bytes=0 error=fetch failed cause=EAI_AGAIN||EAI_AGAIN|
+[diag:github] window=2026-11-28T14:06:41 ~ 2026-11-28T14:23:44 keywords=8
+[diag:github] http=0/64 non200=64 searchParsed=0 detailAttempted=0 detailParsed=0
+[diag:github] raw=0 filtered=0 dedupNew=0 report=reports/cgjy-diagnose/github-2026-11-28T06-06-41-794Z.json
