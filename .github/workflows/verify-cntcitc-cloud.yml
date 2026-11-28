@@ -1,0 +1,42 @@
+name: Verify CNTCITC public source
+on:
+  push:
+    branches: [verify-cntcitc-cloud]
+    paths: [.github/workflows/verify-cntcitc-cloud.yml]
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Read public list and details
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          from html import unescape
+          from urllib.request import urlopen
+
+          base = 'https://www.cntcitc.com.cn/more.html?chanId=13&chanType=3'
+
+          def fetch(label, url):
+              with urlopen(url, timeout=20) as response:
+                  page = response.read(8_000_000)
+                  print(label, response.status, len(page), flush=True)
+                  return page.decode('utf-8', errors='replace')
+
+          def plain(page):
+              return ' '.join(unescape(re.sub(r'<[^>]+>', ' ', page)).split())
+
+          listing = fetch('list', base)
+          ids = list(dict.fromkeys(re.findall(r"showArticle\('([a-f0-9]{30,32})'\)", listing)))
+          print('unique discovery IDs:', len(ids), flush=True)
+          assert ids, 'No detail IDs discovered in public list'
+          detail = fetch('first discovered detail', base + '&contentId=' + ids[0])
+          assert ids[0] in detail and re.search(r'<h2[^>]*>[^<]+</h2>', detail), 'Discovered detail not confirmed'
+          sample = plain(fetch('known tobacco detail', base + '&contentId=fa0d51b6cf114d0698edd5231ae7d31c'))
+          assert '昆明卷烟厂' in sample and 'C202601BA2001716343480' in sample and '公开招标' in sample
+          assert re.search(r'2026\s*年\s*04\s*月\s*23\s*日\s*09\s*时\s*00\s*分', sample)
+          print('Known tobacco sample: C202601BA2001716343480; open tender; bid deadline 2026-04-23 09:00')
+          PY
